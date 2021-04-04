@@ -81,4 +81,27 @@ router.post('/user/register_user', userModel.register_user, function(req, res, c
   // res.json({ status : res.status, message: res.message });
 }); 
 
+router.post('/user/get_user_profile_settings', userModel.get_user_profile_settings, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/get_all_categories', userModel.get_all_categories, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+
+router.post('/user/get_all_subcategories', userModel.get_all_subcategories, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+
+router.post('/user/update_profile_category', userModel.update_profile_category, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/update_profile_expertise', userModel.update_profile_expertise, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+
 module.exports = router;
