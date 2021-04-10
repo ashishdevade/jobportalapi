@@ -103,5 +103,9 @@ router.post('/user/update_profile_expertise', userModel.update_profile_expertise
   // res.json({ status : res.status, message: res.message });
 }); 
 
+router.post('/user/update_profile_expertise_level', userModel.update_profile_expertise_level, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
 
 module.exports = router;

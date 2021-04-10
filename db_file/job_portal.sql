@@ -500,14 +500,15 @@ DROP TABLE IF EXISTS `student_expertise`;
 CREATE TABLE `student_expertise` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `skills` longtext NOT NULL,
+  `others` longtext NOT NULL,
   `level` int(11) DEFAULT NULL COMMENT '1 - entry level, 2 - intermediate, 3 - expert ',
   `student_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 TRUNCATE `student_expertise`;
-INSERT INTO `student_expertise` (`id`, `skills`, `level`, `student_id`) VALUES
-(1,	'Software development, system administrator, application design ',	NULL,	1);
+INSERT INTO `student_expertise` (`id`, `skills`, `others`, `level`, `student_id`) VALUES
+(1,	'other',	'Software development, system administrator, application design',	2,	1);
 
 DROP TABLE IF EXISTS `student_interest`;
 CREATE TABLE `student_interest` (
@@ -851,12 +852,12 @@ CREATE TABLE `user_account` (
 
 TRUNCATE `user_account`;
 INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	2),
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	3),
 (2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL),
-(6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'123',	'Meenesh',	NULL),
-(7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'123',	'James',	NULL),
-(8,	'Student',	'jamesbond1@malinator.com',	'James',	'Bond',	'123',	'James',	NULL),
-(9,	'Student',	'jamesbond2@malinator.com',	'James',	'Bond',	'123',	'James',	NULL);
+(6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL),
+(7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL),
+(8,	'Student',	'jamesbond1@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL),
+(9,	'Student',	'jamesbond2@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL);
 
 DROP TABLE IF EXISTS `user_account_aud`;
 CREATE TABLE `user_account_aud` (
@@ -881,4 +882,4 @@ INSERT INTO `user_account_aud` (`user_account_id`, `rev`, `revtype`, `account_ty
 (2,	4,	0,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	NULL),
 (2,	5,	1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2');
 
--- 2021-04-04 17:35:16
+-- 2021-04-10 11:22:01
