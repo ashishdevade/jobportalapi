@@ -107,5 +107,22 @@ router.post('/user/update_profile_expertise_level', userModel.update_profile_exp
   // res.json({ status : res.status, message: res.message });
 }); 
 
+router.post('/user/add_update_profile_education', userModel.add_update_profile_education, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/skip_this_step', userModel.skip_this_step, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+
+router.post('/user/delete_education', userModel.delete_education, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/get_education_details', userModel.get_education_details, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
 
 module.exports = router;

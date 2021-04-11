@@ -433,17 +433,20 @@ TRUNCATE `student_certificate_aud`;
 DROP TABLE IF EXISTS `student_education`;
 CREATE TABLE `student_education` (
   `student_education_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `date` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `education_end_date` varchar(255) DEFAULT NULL,
-  `education_start_date` varchar(255) DEFAULT NULL,
   `student_id` bigint(20) NOT NULL,
-  `student_university_id` bigint(20) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
+  `student_university_id` bigint(20) DEFAULT NULL,
+  `school` varchar(255) DEFAULT NULL,
+  `study` varchar(255) DEFAULT NULL,
+  `degree` varchar(255) DEFAULT NULL,
+  `from_year` varchar(255) DEFAULT NULL,
+  `to_year` varchar(255) DEFAULT NULL,
+  `description` longtext,
   PRIMARY KEY (`student_education_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `student_education`;
+INSERT INTO `student_education` (`student_education_id`, `student_id`, `student_university_id`, `school`, `study`, `degree`, `from_year`, `to_year`, `description`) VALUES
+(6,	1,	NULL,	'School 124',	'Study 1224',	'Degree 1444',	'2018',	'2019',	'Test');
 
 DROP TABLE IF EXISTS `student_education_aud`;
 CREATE TABLE `student_education_aud` (
@@ -852,7 +855,7 @@ CREATE TABLE `user_account` (
 
 TRUNCATE `user_account`;
 INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	3),
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	4),
 (2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL),
 (6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL),
 (7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL),
@@ -882,4 +885,4 @@ INSERT INTO `user_account_aud` (`user_account_id`, `rev`, `revtype`, `account_ty
 (2,	4,	0,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	NULL),
 (2,	5,	1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2');
 
--- 2021-04-10 11:22:01
+-- 2021-04-11 10:38:13
