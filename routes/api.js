@@ -115,7 +115,6 @@ router.post('/user/skip_this_step', userModel.skip_this_step, function(req, res,
   // res.json({ status : res.status, message: res.message });
 }); 
 
-
 router.post('/user/delete_education', userModel.delete_education, function(req, res, callback){
   // res.json({ status : res.status, message: res.message });
 }); 
@@ -124,5 +123,50 @@ router.post('/user/get_education_details', userModel.get_education_details, func
   // res.json({ status : res.status, message: res.message });
 }); 
 
+router.post('/user/get_countries', userModel.get_countries, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
 
+router.post('/user/get_calling_code', userModel.get_calling_code, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/add_update_profile_employment', userModel.add_update_profile_employment, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/get_employment_details', userModel.get_employment_details, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/delete_employment', userModel.delete_employment, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/get_language_list', userModel.get_language_list, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/add_update_profile_language', userModel.add_update_profile_language, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/add_update_profile_hourlyrate', userModel.add_update_profile_hourlyrate, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/add_update_profile_title_overview', userModel.add_update_profile_title_overview, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+}); 
+
+router.post('/user/add_update_profile_location', userModel.add_update_profile_location, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+});
+
+
+router.post('/user/add_update_profile_phone', userModel.add_update_profile_phone, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+});
+
+ 
 module.exports = router;
