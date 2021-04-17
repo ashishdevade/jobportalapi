@@ -708,7 +708,7 @@ module.exports.add_update_profile_phone = function (req, res, next) {
 		var phone_number    = (req.body.phone_number != undefined && req.body.phone_number != null) ? req.body.phone_number : "";
 		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
-		var updateUser = 'UPDATE user_account SET profile_completed = "10", country_calling_code = "'+ country_calling_code +'", phone_number = "'+ phone_number +'" WHERE user_account_id = "'+user_id+'"';
+		var updateUser = 'UPDATE user_account SET profile_completed = "11", country_calling_code = "'+ country_calling_code +'", phone_number = "'+ phone_number +'" WHERE user_account_id = "'+user_id+'"';
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
