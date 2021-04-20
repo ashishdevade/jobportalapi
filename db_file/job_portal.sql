@@ -1006,10 +1006,178 @@ DROP TABLE IF EXISTS `skill`;
 CREATE TABLE `skill` (
   `skill_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `skill_name` varchar(255) DEFAULT NULL,
+  `category_no` int(11) DEFAULT NULL,
+  `category` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`skill_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `skill`;
+INSERT INTO `skill` (`skill_id`, `skill_name`, `category_no`, `category`) VALUES
+(1,	'SQL',	1,	'Languages'),
+(2,	'NoSQL',	1,	'Languages'),
+(3,	'R',	1,	'Languages'),
+(4,	'Python',	1,	'Languages'),
+(5,	'PL/SQL',	1,	'Languages'),
+(6,	'Tableau ',	2,	'Data Visualization tools'),
+(7,	'Looker',	2,	'Data Visualization tools'),
+(8,	'Zoho Analytics',	2,	'Data Visualization tools'),
+(9,	'Sisense',	2,	'Data Visualization tools'),
+(10,	'IBM Cognos Analytics',	2,	'Data Visualization tools'),
+(11,	'Qlik Sense',	2,	'Data Visualization tools'),
+(12,	'Domo',	2,	'Data Visualization tools'),
+(13,	'Microsoft Power BI',	2,	'Data Visualization tools'),
+(14,	'Klipfolio',	2,	'Data Visualization tools'),
+(15,	'SAP Analytics Cloud',	2,	'Data Visualization tools'),
+(16,	'Alteryx ',	3,	'ETL Tools'),
+(17,	'Xplenty ',	3,	'ETL Tools'),
+(18,	'BiG EVAL ',	3,	'ETL Tools'),
+(19,	'CData Sync ',	3,	'ETL Tools'),
+(20,	'QuerySurge  ',	3,	'ETL Tools'),
+(21,	'DBConvert ',	3,	'ETL Tools'),
+(22,	'Qlik Real-Time ETL ',	3,	'ETL Tools'),
+(23,	'Skyvia ',	3,	'ETL Tools'),
+(24,	'IRI Voracity ',	3,	'ETL Tools'),
+(25,	'Sprinkle ',	3,	'ETL Tools'),
+(26,	'DBConvert Studio By SLOTIX s.r.o.  ',	3,	'ETL Tools'),
+(27,	'Informatica PowerCenter ',	3,	'ETL Tools'),
+(28,	'IBM Infosphere DataStage ',	3,	'ETL Tools'),
+(29,	'Oracle Data Integrator ',	3,	'ETL Tools'),
+(30,	'Microsoft  SQL Server Integrated Services (SSIS) ',	3,	'ETL Tools'),
+(31,	'Ab Initio ',	3,	'ETL Tools'),
+(32,	'Talend ',	3,	'ETL Tools'),
+(33,	'CloverDX ',	3,	'ETL Tools'),
+(34,	'Pentaho Data Integration ',	3,	'ETL Tools'),
+(35,	'Apache Nifi ',	3,	'ETL Tools'),
+(36,	'SAS ',	3,	'ETL Tools'),
+(37,	'SAP BusinessObjects Data Integrator ',	3,	'ETL Tools'),
+(38,	'Oracle Warehouse Builder ',	3,	'ETL Tools'),
+(39,	'Sybase ETL ',	3,	'ETL Tools'),
+(40,	'DBSoftlab ',	3,	'ETL Tools'),
+(41,	'Jasper ',	3,	'ETL Tools'),
+(42,	'Apache Camel ',	3,	'ETL Tools'),
+(43,	'Azure Data factory ',	3,	'ETL Tools'),
+(44,	'Blendo ',	3,	'ETL Tools'),
+(45,	'AWS Glue ',	3,	'ETL Tools'),
+(46,	'MSSQL ',	4,	'Realational Databases'),
+(47,	'Oracle Database ',	4,	'Realational Databases'),
+(48,	'MySQL ',	4,	'Realational Databases'),
+(49,	'IBM Db2 ',	4,	'Realational Databases'),
+(50,	'Amazon Aurora ',	4,	'Realational Databases'),
+(51,	'Amazon Relational Database Service (RDS) ',	4,	'Realational Databases'),
+(52,	'PostgreSQL ',	4,	'Realational Databases'),
+(53,	'SAP HANA ',	4,	'Realational Databases'),
+(54,	'IBM Informix ',	4,	'Realational Databases'),
+(55,	'MariaDB ',	4,	'Realational Databases'),
+(56,	'Redshift ',	4,	'Realational Databases'),
+(57,	'AllegroGraph ',	5,	'Graph Databases'),
+(58,	'Amazon Neptune ',	5,	'Graph Databases'),
+(59,	'ArangoDB ',	5,	'Graph Databases'),
+(60,	'Azure Cosmos DB ',	5,	'Graph Databases'),
+(61,	'DEX/Sparksee ',	5,	'Graph Databases'),
+(62,	'FlockDB ',	5,	'Graph Databases'),
+(63,	'IBM DB2 ',	5,	'Graph Databases'),
+(64,	'InfiniteGraph ',	5,	'Graph Databases'),
+(65,	'MarkLogic ',	5,	'Graph Databases'),
+(66,	'Neo4j ',	5,	'Graph Databases'),
+(67,	'OpenLink Virtuoso ',	5,	'Graph Databases'),
+(68,	'Oracle ',	5,	'Graph Databases'),
+(69,	'OrientDB ',	5,	'Graph Databases'),
+(70,	'OWLIM ',	5,	'Graph Databases'),
+(71,	'Profium Sense ',	5,	'Graph Databases'),
+(72,	'Sqrrl Enterprise ',	5,	'Graph Databases'),
+(73,	'db4o ',	7,	'Object Databases'),
+(74,	'GemStone/S ',	7,	'Object Databases'),
+(75,	'InterSystems Caché ',	7,	'Object Databases'),
+(76,	'JADE ',	7,	'Object Databases'),
+(77,	'ObjectDatabase++ ',	7,	'Object Databases'),
+(78,	'ObjectDB ',	7,	'Object Databases'),
+(79,	'Objectivity/DB ',	7,	'Object Databases'),
+(80,	'ObjectStore ',	7,	'Object Databases'),
+(81,	'ODABA ',	7,	'Object Databases'),
+(82,	'Perst ',	7,	'Object Databases'),
+(83,	'Realm ',	7,	'Object Databases'),
+(84,	'OpenLink Virtuoso ',	7,	'Object Databases'),
+(85,	'Versant Object Database ',	7,	'Object Databases'),
+(86,	'ZODB ',	7,	'Object Databases'),
+(87,	'Apache Accumulo ',	8,	'Tabular Databases'),
+(88,	'Bigtable ',	8,	'Tabular Databases'),
+(89,	'Apache Hbase ',	8,	'Tabular Databases'),
+(90,	'Hypertable ',	8,	'Tabular Databases'),
+(91,	'Mnesia ',	8,	'Tabular Databases'),
+(92,	'OpenLink Virtuoso ',	8,	'Tabular Databases'),
+(93,	'Apache River ',	9,	'Tuple store'),
+(94,	'GigaSpaces ',	9,	'Tuple store'),
+(95,	'Tarantool ',	9,	'Tuple store'),
+(96,	'TIBCO ActiveSpaces ',	9,	'Tuple store'),
+(97,	'OpenLink Virtuoso ',	9,	'Tuple store'),
+(98,	'AllegroGraph ',	10,	'Triple/quad store (RDF) database'),
+(99,	'MarkLogic ',	10,	'Triple/quad store (RDF) database'),
+(100,	'Ontotext-OWLIM ',	10,	'Triple/quad store (RDF) database'),
+(101,	'Oracle NoSQL database ',	10,	'Triple/quad store (RDF) database'),
+(102,	'Profium Sense ',	10,	'Triple/quad store (RDF) database'),
+(103,	'Virtuoso Universal Server ',	10,	'Triple/quad store (RDF) database'),
+(104,	'Azure Cosmos DB ',	10,	'Hosted'),
+(105,	'Amazon DynamoDB ',	10,	'Hosted'),
+(106,	'Amazon DocumentDB ',	10,	'Hosted'),
+(107,	'Amazon SimpleDB ',	10,	'Hosted'),
+(108,	'Clusterpoint database ',	10,	'Hosted'),
+(109,	'Cloudant Data Layer (CouchDB) ',	10,	'Hosted'),
+(110,	'Freebase ',	10,	'Hosted'),
+(111,	'Google Cloud Datastore ',	10,	'Hosted'),
+(112,	'Microsoft Azure Storage services ',	10,	'Hosted'),
+(113,	'OpenLink Virtuoso ',	10,	'Hosted'),
+(114,	'MongoDB ',	10,	'Hosted'),
+(115,	'D3 Pick database',	11,	'Multivalue databases'),
+(116,	'Extensible Storage Engine (ESE/NT)',	11,	'Multivalue databases'),
+(117,	'InfinityDB',	11,	'Multivalue databases'),
+(118,	'InterSystems Caché',	11,	'Multivalue databases'),
+(119,	'jBASE Pick database',	11,	'Multivalue databases'),
+(120,	'mvBase Rocket Software',	11,	'Multivalue databases'),
+(121,	'mvEnterprise Rocket Software',	11,	'Multivalue databases'),
+(122,	'Northgate Information Solutions Reality, the original Pick/MV Database',	11,	'Multivalue databases'),
+(123,	'OpenQM',	11,	'Multivalue databases'),
+(124,	'Revelation Software\'s OpenInsight (Windows) and Advanced Revelation (DOS)',	11,	'Multivalue databases'),
+(125,	'UniData Rocket U2',	11,	'Multivalue databases'),
+(126,	'UniVerse Rocket U2',	11,	'Multivalue databases'),
+(127,	'Azure Cosmos DB',	12,	'Multimodel database'),
+(128,	'Apache Ignite[26][27]',	12,	'Multimodel database'),
+(129,	'ArangoDB',	12,	'Multimodel database'),
+(130,	'Couchbase',	12,	'Multimodel database'),
+(131,	'FoundationDB',	12,	'Multimodel database'),
+(132,	'MarkLogic',	12,	'Multimodel database'),
+(133,	'OrientDB',	12,	'Multimodel database'),
+(134,	'Oracle Database',	12,	'Multimodel database'),
+(135,	'SolarWinds Database Performance Analyzer',	13,	'Database management systems'),
+(136,	'DbVisualizer',	13,	'Database management systems'),
+(137,	'ManageEngine Applications Manager',	13,	'Database management systems'),
+(138,	'Altibase',	13,	'Database management systems'),
+(139,	'Oracle RDBMS',	13,	'Database management systems'),
+(140,	'IBM DB2',	13,	'Database management systems'),
+(141,	'Microsoft SQL Server',	13,	'Database management systems'),
+(142,	'SAP Sybase ASE',	13,	'Database management systems'),
+(143,	'Teradata',	13,	'Database management systems'),
+(144,	'ADABAS',	13,	'Database management systems'),
+(145,	'MySQL',	13,	'Database management systems'),
+(146,	'FileMaker',	13,	'Database management systems'),
+(147,	'Microsoft Access',	13,	'Database management systems'),
+(148,	'Informix',	13,	'Database management systems'),
+(149,	'SQLite',	13,	'Database management systems'),
+(150,	'PostgresSQL',	13,	'Database management systems'),
+(151,	'AmazonRDS',	13,	'Database management systems'),
+(152,	'MongoDB',	13,	'Database management systems'),
+(153,	'Redis',	13,	'Database management systems'),
+(154,	'CouchDB',	13,	'Database management systems'),
+(155,	'Neo4j',	13,	'Database management systems'),
+(156,	'OrientDB',	13,	'Database management systems'),
+(157,	'Couchbase',	13,	'Database management systems'),
+(158,	'Toad',	13,	'Database management systems'),
+(159,	'phpMyAdmin',	13,	'Database management systems'),
+(160,	'SQL Developer',	13,	'Database management systems'),
+(161,	'Seqel PRO',	13,	'Database management systems'),
+(162,	'Robomongo',	13,	'Database management systems'),
+(163,	'Hadoop HDFS',	13,	'Database management systems'),
+(164,	'Cloudera',	13,	'Database management systems'),
+(165,	'MariaDB',	13,	'Database management systems');
 
 DROP TABLE IF EXISTS `skill_aud`;
 CREATE TABLE `skill_aud` (
@@ -1103,7 +1271,7 @@ CREATE TABLE `student_education` (
 
 TRUNCATE `student_education`;
 INSERT INTO `student_education` (`student_education_id`, `student_id`, `student_university_id`, `school`, `study`, `degree`, `from_year`, `to_year`, `description`) VALUES
-(6,	1,	NULL,	'School 124',	'Study 1224',	'Degree 1444',	'2018',	'2019',	'Test');
+(7,	1,	NULL,	'School 1 ',	'Area of Study',	'Degree',	'2008',	'2026',	'Description');
 
 DROP TABLE IF EXISTS `student_education_aud`;
 CREATE TABLE `student_education_aud` (
@@ -1175,7 +1343,7 @@ CREATE TABLE `student_expertise` (
 
 TRUNCATE `student_expertise`;
 INSERT INTO `student_expertise` (`id`, `skills`, `others`, `level`, `student_id`) VALUES
-(1,	'other',	'Software development, system administrator, application design',	2,	1);
+(1,	'other',	'Software development, system administrator, application design',	3,	1);
 
 DROP TABLE IF EXISTS `student_interest`;
 CREATE TABLE `student_interest` (
@@ -1243,9 +1411,9 @@ CREATE TABLE `student_languages` (
 
 TRUNCATE `student_languages`;
 INSERT INTO `student_languages` (`id`, `student_id`, `language_id`, `language_name`, `proficiency`) VALUES
-(9,	1,	NULL,	'English',	'Basic'),
-(8,	1,	NULL,	'Hindi',	'Basic'),
-(7,	1,	NULL,	'French',	'Conversational');
+(18,	1,	NULL,	'French',	'Conversational'),
+(16,	1,	NULL,	'English',	'Basic'),
+(17,	1,	NULL,	'Hindi',	'Basic');
 
 DROP TABLE IF EXISTS `student_project`;
 CREATE TABLE `student_project` (
@@ -1541,17 +1709,18 @@ CREATE TABLE `user_account` (
   `zipcode` varchar(100) DEFAULT NULL,
   `country_calling_code` varchar(50) DEFAULT NULL,
   `phone_number` varchar(100) DEFAULT NULL,
+  `job_type` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`user_account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `user_account`;
-INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `service_fees`, `receive_rate`, `job_title`, `professional_overview`, `country`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	10,	'15',	'-3.00',	'12',	'Full stack developer ',	'I have worked on \n1. Node JS \n2. Angular \n3. react JS \n4. Core PHP\n5. Codeigniter \n6. Laravel \n7.  next js \n\nI like coding, I am workaholic and I like to travel\n',	'India',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	'91',	'9876543210'),
-(2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	'Student',	'jamesbond1@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	'Student',	'jamesbond2@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `service_fees`, `receive_rate`, `job_title`, `professional_overview`, `country`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`) VALUES
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	11,	'15',	'-3.00',	'12',	'Full stack developer ',	'I have worked on \n1. Node JS \n2. Angular \n3. react JS \n4. Core PHP\n5. Codeigniter \n6. Laravel \n7.  next js \n\nI like coding, I am workaholic and I like to travel\n',	'India',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	'91',	'9876543210',	'5'),
+(2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	'Student',	'jamesbond1@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	'Student',	'jamesbond2@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 DROP TABLE IF EXISTS `user_account_aud`;
 CREATE TABLE `user_account_aud` (
@@ -1576,4 +1745,4 @@ INSERT INTO `user_account_aud` (`user_account_id`, `rev`, `revtype`, `account_ty
 (2,	4,	0,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	NULL),
 (2,	5,	1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2');
 
--- 2021-04-16 18:56:12
+-- 2021-04-20 18:32:11

@@ -164,5 +164,9 @@ router.post('/user/add_update_profile_phone', userModel.add_update_profile_phone
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/user/update_profile_job_type', userModel.update_profile_job_type, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
 
 module.exports = router;
