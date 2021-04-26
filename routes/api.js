@@ -169,4 +169,34 @@ router.post('/user/update_profile_job_type', userModel.update_profile_job_type, 
 });
 
 
+router.post('/user/add_update_profile_project', userModel.add_update_profile_project, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/get_project_details', userModel.get_project_details, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/delete_project', userModel.delete_project, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+
+router.post('/user/add_update_license_certificate', userModel.add_update_license_certificate, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/get_license_certificate_details', userModel.get_license_certificate_details, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/delete_license_certificate', userModel.delete_license_certificate, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+
+
+
+
+
 module.exports = router;

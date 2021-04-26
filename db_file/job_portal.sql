@@ -1222,18 +1222,22 @@ TRUNCATE `student_category_aud`;
 DROP TABLE IF EXISTS `student_certificate`;
 CREATE TABLE `student_certificate` (
   `student_certificate_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `certificate_id` bigint(20) NOT NULL,
-  `certificate_link` varchar(255) DEFAULT NULL,
+  `student_id` bigint(20) NOT NULL,
+  `type` varchar(200) NOT NULL COMMENT 'license or certificate',
   `certificate_name` varchar(255) DEFAULT NULL,
-  `date_earned` varchar(255) DEFAULT NULL,
-  `date_ended` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `provider` varchar(255) DEFAULT NULL,
-  `student_id` bigint(20) NOT NULL,
+  `certificate_link` varchar(255) DEFAULT NULL,
+  `date_earned` varchar(255) DEFAULT NULL,
+  `date_ended` varchar(255) DEFAULT NULL,
+  `uploaded_document` text,
   PRIMARY KEY (`student_certificate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `student_certificate`;
+INSERT INTO `student_certificate` (`student_certificate_id`, `student_id`, `type`, `certificate_name`, `description`, `provider`, `certificate_link`, `date_earned`, `date_ended`, `uploaded_document`) VALUES
+(2,	1,	'license',	'Highcharts Demo',	'Description',	'Provider',	'http://www.google.com/test',	'2021-04-07T18:30:00.000Z',	'2021-04-16T18:30:00.000Z',	NULL),
+(3,	1,	'license',	'Full stack developer ',	'Description',	'Provider',	'http://www.google.com/test',	'2021-04-07T18:30:00.000Z',	'2021-04-16T18:30:00.000Z',	NULL);
 
 DROP TABLE IF EXISTS `student_certificate_aud`;
 CREATE TABLE `student_certificate_aud` (
@@ -1411,24 +1415,28 @@ CREATE TABLE `student_languages` (
 
 TRUNCATE `student_languages`;
 INSERT INTO `student_languages` (`id`, `student_id`, `language_id`, `language_name`, `proficiency`) VALUES
-(18,	1,	NULL,	'French',	'Conversational'),
-(16,	1,	NULL,	'English',	'Basic'),
-(17,	1,	NULL,	'Hindi',	'Basic');
+(24,	1,	NULL,	'Hindi',	'Basic'),
+(23,	1,	NULL,	'French',	'Conversational'),
+(22,	1,	NULL,	'English',	'Basic');
 
 DROP TABLE IF EXISTS `student_project`;
 CREATE TABLE `student_project` (
   `student_project_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `date` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `link` varchar(255) DEFAULT NULL,
-  `project_end_date` varchar(255) DEFAULT NULL,
-  `project_start_date` varchar(255) DEFAULT NULL,
   `student_id` bigint(20) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `date` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `project_start_date` varchar(255) DEFAULT NULL,
+  `project_end_date` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`student_project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `student_project`;
+INSERT INTO `student_project` (`student_project_id`, `student_id`, `title`, `description`, `date`, `link`, `project_start_date`, `project_end_date`) VALUES
+(1,	1,	'Test Project 2',	'test test test test test test test test ',	NULL,	'http://www.google.com/test',	'2019-10-31T18:30:00.000Z',	'2020-08-26T18:30:00.000Z'),
+(3,	1,	'Highcharts Demo',	'Highcharts Demo',	NULL,	'http://www.google.com/test',	'2019-10-31T18:30:00.000Z',	'2020-08-26T18:30:00.000Z'),
+(4,	1,	'Highcharts Demo',	'Highcharts Demo',	NULL,	'http://www.google.com/test',	NULL,	NULL);
 
 DROP TABLE IF EXISTS `student_project_aud`;
 CREATE TABLE `student_project_aud` (
@@ -1715,7 +1723,7 @@ CREATE TABLE `user_account` (
 
 TRUNCATE `user_account`;
 INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `service_fees`, `receive_rate`, `job_title`, `professional_overview`, `country`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	11,	'15',	'-3.00',	'12',	'Full stack developer ',	'I have worked on \n1. Node JS \n2. Angular \n3. react JS \n4. Core PHP\n5. Codeigniter \n6. Laravel \n7.  next js \n\nI like coding, I am workaholic and I like to travel\n',	'India',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	'91',	'9876543210',	'5'),
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	13,	'15',	'-3.00',	'12',	'Full stack developer ',	'I have worked on \n1. Node JS \n2. Angular \n3. react JS \n4. Core PHP\n5. Codeigniter \n6. Laravel \n7.  next js \n\nI like coding, I am workaholic and I like to travel\n',	'India',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	'91',	'9876543210',	'5'),
 (2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1745,4 +1753,4 @@ INSERT INTO `user_account_aud` (`user_account_id`, `rev`, `revtype`, `account_ty
 (2,	4,	0,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	NULL),
 (2,	5,	1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2');
 
--- 2021-04-20 18:32:11
+-- 2021-04-26 10:55:19

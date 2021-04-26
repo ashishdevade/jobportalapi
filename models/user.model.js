@@ -156,13 +156,27 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				});
 				
 			} else if(type == "job_type") {
-				 db.query("SELECT job_type FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT job_type FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
 				});
 				
-			}  else {
+			} else if(type == "projects") {
+				db.query("SELECT * FROM student_project WHERE student_id = '"+user_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			}  else if(type == "student_certificate") {
+				db.query("SELECT * FROM student_certificate WHERE student_id = '"+user_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			} else {
 				return res.status(200).send({ code: 600, msg: 'Type Parameter Missing' });
 				
 			}
@@ -751,4 +765,220 @@ module.exports.update_profile_job_type = function (req, res, next) {
 	} 
 }
 
- 
+module.exports.add_update_profile_project = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		
+		var title             = (req.body.title != undefined && req.body.title != null) ? req.body.title : "";
+		var description       = (req.body.description != undefined && req.body.description != null) ? req.body.description : "";
+		var link              = (req.body.link != undefined && req.body.link != null) ? req.body.link : "";
+		var project_duration  = (req.body.project_duration != undefined && req.body.project_duration != null) ? req.body.project_duration : "";
+		var project_id        = (req.body.project_id != undefined && req.body.project_id != null) ? req.body.project_id : "";
+		var user_id           = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		
+		
+		if (project_id == -1) {
+			var data = {
+				"title" : title,
+				"description" : description,
+				"link" : link,
+				"project_start_date" : project_duration[0],
+				"project_end_date" : project_duration[1],
+				"student_id" : user_id
+			}
+
+			var sqlQuery = 'INSERT INTO student_project SET ? ';
+			// var data = [ company_name, job_title, location, country, from_month, from_year, to_month, to_year, job_description, user_id  ];
+			db.query(sqlQuery, data, function (error, result, fields) {
+				if (error) return res.status(500).send({ status: 600, msg: error.message });
+				if (result.insertId > 0) {
+					var updateUser = 'UPDATE user_account SET profile_completed = "12" WHERE user_account_id = "'+user_id+'"';
+					db.query(updateUser, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						let resultset = {
+							"title" : title,
+							"description" : description,
+							"link" : link,
+							"project_start_date" : project_duration[0],
+							"project_end_date" : project_duration[1],
+							"student_project_id" : result.insertId,
+							"user_id" : user_id,
+						}
+						
+						return res.status(200).send({ status: 200, data: resultset });
+					});
+				}
+			});
+		} else {
+			var sqlQuery = 'UPDATE student_project SET title = "'+ title +'", description = "'+ description +'", link = "'+ link +'", project_start_date = "'+ project_duration[0] +'", project_end_date = "'+ project_duration[1] +'" WHERE student_id = "'+ user_id +'" AND student_project_id = "'+project_id+'" ';
+			db.query(sqlQuery, function (error, result, fields) {
+				if (error) return res.status(500).send({ status: 600, msg: error.message });
+				
+				var updateUser = 'UPDATE user_account SET profile_completed = "12" WHERE user_account_id = "'+user_id+'"';
+				db.query(updateUser, function (error, result, fields) {
+					if (error) return res.status(500).send({ status: 600, msg: error.message });
+					let resultset = {
+						"title" : title,
+						"description" : description,
+						"link" : link,
+						"project_start_date" : project_duration[0],
+						"project_end_date" : project_duration[1],
+						"student_project_id" : project_id,
+						"user_id" : user_id,
+					}
+					
+					return res.status(200).send({ status: 200, data: resultset });
+				});
+			});
+		}
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.get_project_details = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var project_id = (req.body.project_id != undefined && req.body.project_id != null) ? req.body.project_id : "";
+		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		if(project_id!= ""){
+			db.query('SELECT * FROM student_project WHERE student_id = "'+user_id+'" AND student_project_id = "'+project_id+'"', function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+
+				return res.status(200).send({ status: 200, data: result });
+			});
+			
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Education ID Passed' });
+			
+		}
+	} else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.delete_project = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var project_id = (req.body.project_id != undefined && req.body.project_id != null) ? req.body.project_id : "";
+		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		var updateUser = 'DELETE  FROM student_project WHERE student_id = "'+user_id+'" AND student_project_id = "'+project_id+'"';
+		db.query(updateUser, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			
+			let resultset = { }
+			
+			return res.status(200).send({ status: 200, data: resultset });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.add_update_license_certificate = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var type                = (req.body.type != undefined && req.body.type != null) ? req.body.type : "";
+		var title               = (req.body.title != undefined && req.body.title != null) ? req.body.title : "";
+		var description         = (req.body.description != undefined && req.body.description != null) ? req.body.description : "";
+		var provider            = (req.body.provider != undefined && req.body.provider != null) ? req.body.provider : "";
+		var link                = (req.body.link != undefined && req.body.link != null) ? req.body.link : "";
+		var date_earned         = (req.body.date_earned != undefined && req.body.date_earned != null) ? req.body.date_earned : "";
+		var date_expirty        = (req.body.date_expirty != undefined && req.body.date_expirty != null) ? req.body.date_expirty : "";
+		var lic_certificate_id  = (req.body.lic_certificate_id != undefined && req.body.lic_certificate_id != null) ? req.body.lic_certificate_id : "";
+		var user_id             = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		
+		if (lic_certificate_id == -1) {
+			var data = {
+				"type": type,
+				"certificate_name": title,
+				"description": description,
+				"provider": provider,
+				"certificate_link": link,
+				"date_earned": date_earned,
+				"date_ended": date_expirty,
+				"student_id" : user_id
+			}
+
+			var sqlQuery = 'INSERT INTO student_certificate SET ? ';
+			db.query(sqlQuery, data, function (error, result, fields) {
+				if (error) return res.status(500).send({ status: 600, msg: error.message });
+				if (result.insertId > 0) {
+					var updateUser = 'UPDATE user_account SET profile_completed = "12" WHERE user_account_id = "'+user_id+'"';
+					db.query(updateUser, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						let resultset = {
+							"type" : type,
+							"certificate_name" : title,
+							"description" : description,
+							"provider" : provider,
+							"certificate_link" : link,
+							"date_earned" : date_earned,
+							"date_ended" : date_expirty,
+							"user_id" : user_id,
+						}
+						
+						return res.status(200).send({ status: 200, data: resultset });
+					});
+				}
+			});
+		} else {
+			var sqlQuery = 'UPDATE student_project SET type = "'+ type +'", description = "'+ description +'", certificate_name = "'+ title +'", provider = "'+ provider +'", certificate_link = "'+ certificate_link  +'", date_earned = "'+ date_earned +'", date_ended = "'+ date_ended +'"  WHERE student_id = "'+ user_id +'" AND student_certificate_id = "'+lic_certificate_id+'" ';
+			db.query(sqlQuery, function (error, result, fields) {
+				if (error) return res.status(500).send({ status: 600, msg: error.message });
+				
+				var updateUser = 'UPDATE user_account SET profile_completed = "12" WHERE user_account_id = "'+user_id+'"';
+				db.query(updateUser, function (error, result, fields) {
+					if (error) return res.status(500).send({ status: 600, msg: error.message });
+					let resultset = {
+						"type" : type,
+						"certificate_name" : title,
+						"description" : description,
+						"provider" : provider,
+						"certificate_link" : link,
+						"date_earned" : date_earned,
+						"date_ended" : date_expirty,
+						"user_id" : user_id,
+					}
+					
+					return res.status(200).send({ status: 200, data: resultset });
+				});
+			});
+		}
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.get_license_certificate_details = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var lic_certificate_id = (req.body.lic_certificate_id != undefined && req.body.lic_certificate_id != null) ? req.body.lic_certificate_id : "";
+		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		if(lic_certificate_id!= ""){
+			db.query('SELECT * FROM student_certificate WHERE student_id = "'+user_id+'" AND student_certificate_id = "'+lic_certificate_id+'"', function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+
+				return res.status(200).send({ status: 200, data: result });
+			});
+			
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Education ID Passed' });
+			
+		}
+	} else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.delete_license_certificate = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var lic_certificate_id = (req.body.lic_certificate_id != undefined && req.body.lic_certificate_id != null) ? req.body.lic_certificate_id : "";
+		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		var updateUser = 'DELETE  FROM student_certificate WHERE student_id = "'+user_id+'" AND student_certificate_id = "'+lic_certificate_id+'"';
+		db.query(updateUser, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			
+			let resultset = { }
+			
+			return res.status(200).send({ status: 200, data: resultset });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
