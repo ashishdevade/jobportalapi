@@ -194,6 +194,10 @@ router.post('/user/delete_license_certificate', userModel.delete_license_certifi
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/user/get_skills', userModel.get_skills, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
 
 
 

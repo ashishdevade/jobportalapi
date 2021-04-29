@@ -275,7 +275,7 @@ module.exports.update_profile_expertise = function (req, res, next) {
 			if (err) return res.status(200).send({ status: 500, data: err });
 			if (result.length == 0) {
 				var sqlQuery = 'INSERT INTO student_expertise SET skills = ?, others = ?, student_id = ?';
-				var data = [skills, other, user_id];
+				var data = [JSON.stringify(skills), other, user_id];
 				db.query(sqlQuery, data, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					
@@ -292,7 +292,9 @@ module.exports.update_profile_expertise = function (req, res, next) {
 					});
 				});
 			} else {
-				var sqlQuery = 'UPDATE student_expertise SET skills = "'+ skills +'", others = "'+ other +'" WHERE student_id = "'+user_id+'"';
+				let skill_set = JSON.stringify(skills);
+				var sqlQuery = "UPDATE student_expertise SET skills = '"+ skill_set +"', others = '"+ other +"' WHERE student_id = '"+ user_id + "'";
+				console.log("sqlQuery ", sqlQuery);
 				db.query(sqlQuery, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					
@@ -900,7 +902,7 @@ module.exports.add_update_license_certificate = function (req, res, next) {
 			db.query(sqlQuery, data, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 				if (result.insertId > 0) {
-					var updateUser = 'UPDATE user_account SET profile_completed = "12" WHERE user_account_id = "'+user_id+'"';
+					var updateUser = 'UPDATE user_account SET profile_completed = "13" WHERE user_account_id = "'+user_id+'"';
 					db.query(updateUser, function (error, result, fields) {
 						if (error) return res.status(500).send({ status: 600, msg: error.message });
 						let resultset = {
@@ -923,7 +925,7 @@ module.exports.add_update_license_certificate = function (req, res, next) {
 			db.query(sqlQuery, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 				
-				var updateUser = 'UPDATE user_account SET profile_completed = "12" WHERE user_account_id = "'+user_id+'"';
+				var updateUser = 'UPDATE user_account SET profile_completed = "13" WHERE user_account_id = "'+user_id+'"';
 				db.query(updateUser, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					let resultset = {
@@ -979,6 +981,27 @@ module.exports.delete_license_certificate = function (req, res, next) {
 			return res.status(200).send({ status: 200, data: resultset });
 		});
 	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.get_skills = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var skill_id = (req.body.skill_id != undefined && req.body.skill_id != null) ? req.body.skill_id : "";
+		var where_clause ='';
+		if(skill_id!= "-1"){
+			where_clause =" WHERE skill_id = '"+skill_id+"'";
+		} 
+		
+		var select = "SELECT skill_id as id, skill_name as name FROM skill" + where_clause;
+		console.log("select ", select);
+		db.query(select, function (err, result, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+
+			return res.status(200).send({ status: 200, data: result });
+		});
+		
+	} else {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 	} 
 }
