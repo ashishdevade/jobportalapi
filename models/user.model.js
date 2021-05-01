@@ -142,7 +142,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			} else if(type == "location") {
-				db.query("SELECT country, city, street_address, zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT country_id, country, state_id, state, city, street_address, zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -469,11 +469,30 @@ module.exports.get_education_details = function (req, res, next) {
 }
 
 module.exports.get_countries = function (req, res, next) {
-	db.query("SELECT id, country_name FROM countries", function (err, result, fields) {
+	db.query("SELECT id, country_name as name FROM countries", function (err, result, fields) {
 		if (err) return res.status(200).send({ status: 500, data: err });
 
 		return res.status(200).send({ status: 200, data: result });
 	});
+}
+
+module.exports.get_states = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var country_id = (req.body.country_id != undefined && req.body.country_id != null) ? req.body.country_id : "";
+		if(country_id!= ""){
+			db.query("SELECT id, state_name as name  FROM states WHERE country_id = '"+country_id+"'", function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+
+				return res.status(200).send({ status: 200, data: result });
+			});
+			
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Category ID Passed' });
+			
+		}
+	} else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
 }
 
 module.exports.get_calling_code = function (req, res, next) {
@@ -701,13 +720,16 @@ module.exports.add_update_profile_title_overview = function (req, res, next) {
 
 module.exports.add_update_profile_location = function (req, res, next) {
 	if (Object.keys(req.body).length > 0) {
+		var country_id = (req.body.country_id != undefined && req.body.country_id != null) ? req.body.country_id : "";
 		var country = (req.body.country != undefined && req.body.country != null) ? req.body.country : "";
+		var state_id = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
+		var state = (req.body.state != undefined && req.body.state != null) ? req.body.state : "";
 		var city    = (req.body.city != undefined && req.body.city != null) ? req.body.city : "";
 		var street_address = (req.body.street_address != undefined && req.body.street_address != null) ? req.body.street_address : "";
 		var zipcode = (req.body.zipcode != undefined && req.body.zipcode != null) ? req.body.zipcode : "";
 		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
-		var updateUser = 'UPDATE user_account SET profile_completed = "10", country = "'+ country +'", city = "'+ city +'", street_address = "'+ street_address +'", zipcode = "'+ zipcode +'" WHERE user_account_id = "'+user_id+'"';
+		var updateUser = 'UPDATE user_account SET profile_completed = "10", country = "'+ country +'", country_id = "'+ country_id +'",  state_id = "'+ state_id +'", state = "'+ state +'", city = "'+ city +'", street_address = "'+ street_address +'", zipcode = "'+ zipcode +'" WHERE user_account_id = "'+user_id+'"';
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
