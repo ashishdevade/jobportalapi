@@ -5763,6 +5763,7 @@ CREATE TABLE `user_account` (
   `user_name` varchar(255) DEFAULT NULL,
   `profile_completed` int(11) DEFAULT NULL,
   `hourly_rate` varchar(200) DEFAULT NULL,
+  `salary_expectation` varchar(200) DEFAULT NULL,
   `service_fees` varchar(200) DEFAULT NULL,
   `receive_rate` varchar(200) DEFAULT NULL,
   `job_title` text,
@@ -5780,13 +5781,13 @@ CREATE TABLE `user_account` (
   PRIMARY KEY (`user_account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `service_fees`, `receive_rate`, `job_title`, `professional_overview`, `country`, `country_id`, `state`, `state_id`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	10,	'15',	'-3.00',	'12',	'Full stack developer ',	'I have worked on \n1. Node JS \n2. Angular \n3. react JS \n4. Core PHP\n5. Codeigniter \n6. Laravel \n7.  next js \n\nI like coding, I am workaholic and I like to travel\n',	'India',	'105',	'Madhya Pradesh',	'1503',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	'91',	'9876543210',	'5'),
-(2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	'Student',	'jamesbond1@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	'Student',	'jamesbond2@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `job_title`, `professional_overview`, `country`, `country_id`, `state`, `state_id`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`) VALUES
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	7,	'20',	'35000',	'-4.00',	'16',	'Full stack developer ',	'I have worked on \n1. Node JS \n2. Angular \n3. react JS \n4. Core PHP\n5. Codeigniter \n6. Laravel \n7.  next js \n\nI like coding, I am workaholic and I like to travel\n',	'India',	'105',	'Madhya Pradesh',	'1503',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	'91',	'9876543210',	'4'),
+(2,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	'Student',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	'Student',	'jamesbond1@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	'Student',	'jamesbond2@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 DROP TABLE IF EXISTS `user_account_aud`;
 CREATE TABLE `user_account_aud` (
@@ -5810,4 +5811,4 @@ INSERT INTO `user_account_aud` (`user_account_id`, `rev`, `revtype`, `account_ty
 (2,	4,	0,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	NULL),
 (2,	5,	1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'Aa7LziB1',	'Nisarg2');
 
--- 2021-05-01 18:55:07
+-- 2021-05-02 17:45:23

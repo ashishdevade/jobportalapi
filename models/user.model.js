@@ -130,7 +130,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			} else if(type == "hourly-rate") {
-				db.query("SELECT hourly_rate, service_fees, receive_rate FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT hourly_rate, service_fees, receive_rate, job_type, salary_expectation FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -676,16 +676,18 @@ module.exports.add_update_profile_language = function (req, res, next) {
 module.exports.add_update_profile_hourlyrate = function (req, res, next) {
 	if (Object.keys(req.body).length > 0) {
 		var hourly_date = (req.body.hourly_date != undefined && req.body.hourly_date != null) ? req.body.hourly_date : "";
+		var salary_expectation = (req.body.salary_expectation != undefined && req.body.salary_expectation != null) ? req.body.salary_expectation : "";
 		var service_fees = (req.body.service_fees != undefined && req.body.service_fees != null) ? req.body.service_fees : "";
 		var receive_rate = (req.body.receive_rate != undefined && req.body.receive_rate != null) ? req.body.receive_rate : "";
 		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		var updateUser = 'UPDATE user_account SET profile_completed = "7", hourly_rate = "'+ hourly_date +'", service_fees = "'+ service_fees +'", receive_rate = "'+ receive_rate +'" WHERE user_account_id = "'+user_id+'"';
+		var updateUser = 'UPDATE user_account SET profile_completed = "7", hourly_rate = "'+ hourly_date +'", service_fees = "'+ service_fees +'", salary_expectation = "'+ salary_expectation +'", receive_rate = "'+ receive_rate +'" WHERE user_account_id = "'+user_id+'"';
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
 			let resultset = {
 				"hourly_date":hourly_date,
 				"service_fees":service_fees,
+				"salary_expectation":salary_expectation,
 				"receive_rate":receive_rate,
 			}
 			
