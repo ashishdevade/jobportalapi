@@ -10,8 +10,14 @@ var constants = require('../config/constants');
 // Models - start 
 var userModel = require('../models/user.model');
 // Models - end
-
 const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({
+  limit: "50000mb",
+  extended: false
+}));
+app.use(bodyParser.json({limit: "50000mb"}));
+
 
 router.use(function (req, res, next) {
 
@@ -47,8 +53,7 @@ var storage = multer.diskStorage({
 });
 var uploads = multer({ storage: storage });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 /////////////////// ------------------ ///////////////
 /////////////////// Common API Start ///////////////
@@ -202,8 +207,9 @@ router.post('/user/get_skills', userModel.get_skills, function (req, res, callba
   // res.json({ status : res.status, message: res.message });
 });
 
-
-
+router.post('/user/add_update_profile_photo', userModel.add_update_profile_photo, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
 
 
 

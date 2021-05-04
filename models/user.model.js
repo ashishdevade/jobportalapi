@@ -176,7 +176,14 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 				
-			} else {
+			} else if(type == "profile-photo") {
+				db.query("SELECT profile_photo FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			}  else {
 				return res.status(200).send({ code: 600, msg: 'Type Parameter Missing' });
 				
 			}
@@ -1029,3 +1036,25 @@ module.exports.get_skills = function (req, res, next) {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 	} 
 }
+
+
+module.exports.add_update_profile_photo = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var profile_photo = (req.body.profile_photo != undefined && req.body.profile_photo != null) ? req.body.profile_photo : "";
+		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		console.log("profile_photo ", profile_photo);
+		var updateUser = 'UPDATE user_account SET profile_completed = "9", profile_photo = "'+ profile_photo +'" WHERE user_account_id = "'+user_id+'"';
+		db.query(updateUser, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			
+			let resultset = { 
+				'profile_photo' : profile_photo,
+			}
+			
+			return res.status(200).send({ status: 200, data: resultset });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+ 
