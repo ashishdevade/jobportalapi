@@ -41,8 +41,8 @@ router.use(function (req, res, next) {
 
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    if (file.fieldname == "image") {
-      callback(null, constants.image_folder + 'business')
+    if (file.fieldname == "profile_picture") {
+      callback(null, constants.image_folder + 'profile_picture')
     } else if (file.fieldname == "upload" || file.fieldname == "upload") {
       callback(null, constants.image_folder + '')
     }
@@ -207,10 +207,14 @@ router.post('/user/get_skills', userModel.get_skills, function (req, res, callba
   // res.json({ status : res.status, message: res.message });
 });
 
-router.post('/user/add_update_profile_photo', userModel.add_update_profile_photo, function (req, res, callback) {
+/*router.post('/user/add_update_profile_photo', userModel.add_update_profile_photo, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
+*/
 
+router.post('/user/add_update_profile_photo/',uploads.single('profile_picture'),  userModel.add_update_profile_photo, function(req, res, callback){
+  // res.json({ status : res.status, message: res.message });
+});
 
 
 module.exports = router;

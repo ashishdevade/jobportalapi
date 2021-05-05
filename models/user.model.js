@@ -1039,11 +1039,18 @@ module.exports.get_skills = function (req, res, next) {
 
 
 module.exports.add_update_profile_photo = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var profile_photo = (req.body.profile_photo != undefined && req.body.profile_photo != null) ? req.body.profile_photo : "";
+	/*if (Object.keys(req.body).length > 0) {*/
+		var image_path = "";
+		if(req.file!= undefined){
+			if(req.file.path != undefined ){
+				//profile_photo = (req.file.path).trim();
+				profile_photo = req.file.path.replace(/\\/g, "/");
+			}
+		}
+		// var profile_photo = (req.body.profile_photo != undefined && req.body.profile_photo != null) ? req.body.profile_photo : "";
 		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		console.log("profile_photo ", profile_photo);
-		var updateUser = 'UPDATE user_account SET profile_completed = "9", profile_photo = "'+ profile_photo +'" WHERE user_account_id = "'+user_id+'"';
+		var updateUser = "UPDATE user_account SET profile_completed = '9', profile_photo = '"+ profile_photo +"' WHERE user_account_id = '"+user_id + "' ";
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
@@ -1053,8 +1060,9 @@ module.exports.add_update_profile_photo = function (req, res, next) {
 			
 			return res.status(200).send({ status: 200, data: resultset });
 		});
-	}  else {
+	/*}  else {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
+	} */
 }
+
  
