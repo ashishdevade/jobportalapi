@@ -43,8 +43,8 @@ var storage = multer.diskStorage({
   destination: function (req, file, callback) {
     if (file.fieldname == "profile_picture") {
       callback(null, constants.image_folder + 'profile_picture')
-    } else if (file.fieldname == "upload" || file.fieldname == "upload") {
-      callback(null, constants.image_folder + '')
+    } else if (file.fieldname == "license_document") {
+      callback(null, constants.upload_folder + 'license_document')
     }
   },
   filename: function (req, file, cb) {
@@ -68,6 +68,10 @@ router.get("/media/:filename", function (req, res) {
 
 router.get("/" + constants.image_folder + ":foldername/:filename", function (req, res) {
   res.sendFile('/' + constants.image_folder + req.params.foldername + '/' + req.params.filename, { root: "./" });
+});
+
+router.get("/" + constants.upload_folder + ":foldername/:filename", function (req, res) {
+  res.sendFile('/' + constants.upload_folder + req.params.foldername + '/' + req.params.filename, { root: "./" });
 });
 
 router.get('/user/get_all_users/', userModel.get_user_list, function (req, res, callback) {
@@ -191,9 +195,14 @@ router.post('/user/delete_project', userModel.delete_project, function (req, res
 });
 
 
-router.post('/user/add_update_license_certificate', userModel.add_update_license_certificate, function (req, res, callback) {
+/*router.post('/user/add_update_license_certificate', userModel.add_update_license_certificate, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});*/
+
+router.post('/user/add_update_license_certificate/',uploads.single('license_document'),  userModel.add_update_license_certificate, function(req, res, callback){
   // res.json({ status : res.status, message: res.message });
 });
+
 
 router.post('/user/get_license_certificate_details', userModel.get_license_certificate_details, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
@@ -215,6 +224,5 @@ router.post('/user/get_skills', userModel.get_skills, function (req, res, callba
 router.post('/user/add_update_profile_photo/',uploads.single('profile_picture'),  userModel.add_update_profile_photo, function(req, res, callback){
   // res.json({ status : res.status, message: res.message });
 });
-
 
 module.exports = router;

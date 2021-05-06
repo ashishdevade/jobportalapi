@@ -906,7 +906,14 @@ module.exports.delete_project = function (req, res, next) {
 }
 
 module.exports.add_update_license_certificate = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
+//	if (Object.keys(req.body).length > 0) {
+	var uploaded_document = "";
+	if(req.file!= undefined){
+		if(req.file.path != undefined ){
+				//uploaded_document = (req.file.path).trim();
+				uploaded_document = req.file.path.replace(/\\/g, "/");
+			}
+		}
 		var type                = (req.body.type != undefined && req.body.type != null) ? req.body.type : "";
 		var title               = (req.body.title != undefined && req.body.title != null) ? req.body.title : "";
 		var description         = (req.body.description != undefined && req.body.description != null) ? req.body.description : "";
@@ -914,7 +921,7 @@ module.exports.add_update_license_certificate = function (req, res, next) {
 		var link                = (req.body.link != undefined && req.body.link != null) ? req.body.link : "";
 		var date_earned         = (req.body.date_earned != undefined && req.body.date_earned != null) ? req.body.date_earned : "";
 		var date_expirty        = (req.body.date_expirty != undefined && req.body.date_expirty != null) ? req.body.date_expirty : "";
-		var lic_certificate_id  = (req.body.lic_certificate_id != undefined && req.body.lic_certificate_id != null) ? req.body.lic_certificate_id : "";
+		var lic_certificate_id  = (req.body.license_certificate_id != undefined && req.body.license_certificate_id != null) ? req.body.license_certificate_id : "";
 		var user_id             = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
 		if (lic_certificate_id == -1) {
@@ -926,7 +933,8 @@ module.exports.add_update_license_certificate = function (req, res, next) {
 				"certificate_link": link,
 				"date_earned": date_earned,
 				"date_ended": date_expirty,
-				"student_id" : user_id
+				"student_id" : user_id,
+				"uploaded_document" : uploaded_document,
 			}
 
 			var sqlQuery = 'INSERT INTO student_certificate SET ? ';
@@ -952,7 +960,12 @@ module.exports.add_update_license_certificate = function (req, res, next) {
 				}
 			});
 		} else {
-			var sqlQuery = 'UPDATE student_project SET type = "'+ type +'", description = "'+ description +'", certificate_name = "'+ title +'", provider = "'+ provider +'", certificate_link = "'+ certificate_link  +'", date_earned = "'+ date_earned +'", date_ended = "'+ date_ended +'"  WHERE student_id = "'+ user_id +'" AND student_certificate_id = "'+lic_certificate_id+'" ';
+			var additional_parameter = "";
+			if(uploaded_document!= ""){
+				additional_parameter = ' , uploaded_document = "'+ uploaded_document +'"  ';
+			}
+			
+			var sqlQuery = 'UPDATE student_certificate SET type = "'+ type +'", description = "'+ description +'", certificate_name = "'+ title +'", provider = "'+ provider +'", certificate_link = "'+ link  +'", date_earned = "'+ date_earned +'", date_ended = "'+ date_expirty +'"  '+ additional_parameter +'  WHERE student_id = "'+ user_id +'" AND student_certificate_id = "'+lic_certificate_id+'" ';
 			db.query(sqlQuery, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 				
@@ -974,9 +987,9 @@ module.exports.add_update_license_certificate = function (req, res, next) {
 				});
 			});
 		}
-	}  else {
+	/*}  else {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
+	} */
 }
 
 module.exports.get_license_certificate_details = function (req, res, next) {
@@ -1040,7 +1053,7 @@ module.exports.get_skills = function (req, res, next) {
 
 module.exports.add_update_profile_photo = function (req, res, next) {
 	/*if (Object.keys(req.body).length > 0) {*/
-		var image_path = "";
+		var profile_photo = "";
 		if(req.file!= undefined){
 			if(req.file.path != undefined ){
 				//profile_photo = (req.file.path).trim();
@@ -1065,4 +1078,3 @@ module.exports.add_update_profile_photo = function (req, res, next) {
 	} */
 }
 
- 
