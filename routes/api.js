@@ -225,4 +225,12 @@ router.post('/user/add_update_profile_photo/',uploads.single('profile_picture'),
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/user/update_profile_job_location_preference', userModel.update_profile_job_location_preference, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/update_profile_timeline_hiring', userModel.update_profile_timeline_hiring, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
 module.exports = router;

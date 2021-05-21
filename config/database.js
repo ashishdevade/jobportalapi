@@ -3,7 +3,8 @@ var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
   password : '',
-  database : 'job_portal'
+  database : 'job_portal',
+  multipleStatements: true
 });
 
 connection.connect(function(err) {

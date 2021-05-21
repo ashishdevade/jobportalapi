@@ -43,7 +43,9 @@ module.exports.validate_login = function (req, res, next) {
 
 module.exports.register_user = function (req, res, next) {
 	if (Object.keys(req.body).length > 0) {
+		
 		var account_type = (req.body.account_type != undefined && req.body.account_type != null) ? req.body.account_type : "";
+		var company_name = (req.body.company_name != undefined && req.body.company_name != null) ? req.body.company_name : "";
 		var firstname = (req.body.firstname != undefined && req.body.firstname != null) ? req.body.firstname : "";
 		var lastname = (req.body.lastname != undefined && req.body.lastname != null) ? req.body.lastname : "";
 		var email = (req.body.email != undefined && req.body.email != null) ? req.body.email : "";
@@ -60,8 +62,8 @@ module.exports.register_user = function (req, res, next) {
 		db.query("SELECT * FROM user_account WHERE email_id = '" + email + "'", function (err, result, fields) {
 			if (err) return res.status(200).send({ status: 500, data: err });
 			if (result.length == 0) {
-				var sqlQuery = 'INSERT INTO user_account SET account_type = ? , first_name = ? , last_name = ? , email_id = ? , password = ?, user_name = ? ';
-				var data = [account_type, firstname, lastname, email, md5(password), firstname];
+				var sqlQuery = 'INSERT INTO user_account SET account_type = ? , first_name = ? , last_name = ? , email_id = ? , password = ?, user_name = ?, company_name = ? ';
+				var data = [account_type, firstname, lastname, email, md5(password), firstname, company_name];
 				db.query(sqlQuery, data, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					if (result.insertId > 0) {
@@ -73,6 +75,7 @@ module.exports.register_user = function (req, res, next) {
 							"lastname": lastname,
 							"email": email,
 							"password": password,
+							"company_name": company_name,
 						}
 
 						return res.status(200).send({ status: 200, data: resultset });
@@ -99,7 +102,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 		var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		if(type!= ""){
 			if(type == 'category'){
-				db.query("SELECT * FROM student_category WHERE student_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT sc.*, cat.name as category_name,  subcategory_name FROM student_category as sc LEFT JOIN  category as cat ON sc.category_id = cat.category_id LEFT JOIN subcategories as subcat ON sc.subcategory_id = subcat.id WHERE student_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -124,7 +127,9 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			} else if(type == "language") {
-				db.query("SELECT * FROM student_languages WHERE student_id = '"+user_id+"'", function (err, result, fields) {
+				var lagnuage_query = "SELECT * FROM student_languages WHERE student_id = '"+user_id+"' ORDER BY id ASC";
+				console.log("lagnuage_query ", lagnuage_query);
+				db.query(lagnuage_query, function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -181,6 +186,53 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			} else if(type == "user-account") {
+				db.query("SELECT company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, location_preference_name, timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			}  else if(type == "location-preference") {
+				db.query("SELECT location_preference, location_preference_name FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+			}  else if(type == "timeline-hiring") {
+				db.query("SELECT timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+			}  else if(type == "review") {
+				var user_account_query = "SELECT company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, location_preference_name, timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var student_category_query = "SELECT sc.*, cat.name as category_name,  subcategory_name FROM student_category as sc LEFT JOIN  category as cat ON sc.category_id = cat.category_id LEFT JOIN subcategories as subcat ON sc.subcategory_id = subcat.id WHERE student_id = '"+user_id+"'"
+				var student_expertise_query = "SELECT * FROM student_expertise WHERE student_id = '"+user_id+"'";
+				var student_education_query = "SELECT * FROM student_education WHERE student_id = '"+user_id+"'";
+				var student_experience_query = "SELECT * FROM student_experience WHERE student_id = '"+user_id+"'";
+				var student_languages_query = "SELECT * FROM student_languages WHERE student_id = '"+user_id+"' ORDER BY id ASC";
+				var student_project_query = "SELECT * FROM student_project WHERE student_id = '"+user_id+"'";
+				var student_certificate_query = "SELECT * FROM student_certificate WHERE student_id = '"+user_id+"'";
+				
+				db.query(user_account_query + ";" + student_category_query + ";" + student_expertise_query + ";" + student_education_query + ";" + student_experience_query + ";" + student_languages_query + ";" + student_project_query + ";" + student_certificate_query, function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+					var user_account_details = result;
+					
+					let return_response = {
+						"user_account_data" : result[0],
+						"category_data" : result[1],
+						"expertise_data" : result[2],
+						"education_data" : result[3],
+						"experience_data" : result[4],
+						"languages_data" : result[5],
+						"project_data" : result[6],
+						"certificate_data" : result[7],
+					}
+
+					return res.status(200).send({ status: 200, data: return_response });
 				});
 				
 			}  else {
@@ -476,7 +528,7 @@ module.exports.get_education_details = function (req, res, next) {
 }
 
 module.exports.get_countries = function (req, res, next) {
-	db.query("SELECT id, country_name as name FROM countries", function (err, result, fields) {
+	db.query("SELECT id, country_name as name, country_name FROM countries", function (err, result, fields) {
 		if (err) return res.status(200).send({ status: 500, data: err });
 
 		return res.status(200).send({ status: 200, data: result });
@@ -1078,3 +1130,47 @@ module.exports.add_update_profile_photo = function (req, res, next) {
 	} */
 }
 
+module.exports.update_profile_job_location_preference = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var location_preference = (req.body.location_preference != undefined && req.body.location_preference != null) ? req.body.location_preference : "";
+		var prefered_location_name = (req.body.prefered_location_name != undefined && req.body.prefered_location_name != null) ? req.body.prefered_location_name : "";
+		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		
+		var updateUser = 'UPDATE user_account SET profile_completed = "6", location_preference = "'+ location_preference +'", location_preference_name = "'+ prefered_location_name +'"  WHERE user_account_id = "'+user_id+'"';
+		db.query(updateUser, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			
+			let resultset = { 
+				'location_preference' : location_preference,
+				'location_preference_name' : prefered_location_name,
+			}
+			
+			return res.status(200).send({ status: 200, data: resultset });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+
+module.exports.update_profile_timeline_hiring = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var timeline_hiring = (req.body.timeline_hiring != undefined && req.body.timeline_hiring != null) ? req.body.timeline_hiring : "";
+		var timeline_hiring_weeks = (req.body.timeline_hiring_weeks != undefined && req.body.timeline_hiring_weeks != null) ? req.body.timeline_hiring_weeks : "";
+		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		
+		var updateUser = 'UPDATE user_account SET profile_completed = "6", timeline_hiring = "'+ timeline_hiring +'", timeline_hiring_weeks = "'+ timeline_hiring_weeks +'"  WHERE user_account_id = "'+user_id+'"';
+		db.query(updateUser, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			
+			let resultset = { 
+				'timeline_hiring' : timeline_hiring,
+				'timeline_hiring_weeks' : timeline_hiring_weeks,
+			}
+			
+			return res.status(200).send({ status: 200, data: resultset });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
