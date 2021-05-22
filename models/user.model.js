@@ -7,10 +7,10 @@ var common_functions = require('../config/common.function');
 var async = require('async');
 var md5 = require('md5');
 const bodyParser = require('body-parser');
+const fs = require("fs");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 // test api 
 module.exports.get_user_list = function (req, res, next) {
@@ -184,14 +184,20 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 			} else if(type == "profile-photo") {
 				db.query("SELECT profile_photo FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
-
+					var path = result[0]['profile_photo'];
+					if (!fs.existsSync(path)) {
+						result[0]['profile_photo'] = "";
+					} 
 					return res.status(200).send({ status: 200, data: result });
 				});
 				
 			} else if(type == "user-account") {
 				db.query("SELECT company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, location_preference_name, timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
-
+					var path = result[0]['profile_photo'];
+					if (!fs.existsSync(path)) {
+						result[0]['profile_photo'] = "";
+					} 
 					return res.status(200).send({ status: 200, data: result });
 				});
 				
@@ -220,6 +226,10 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				db.query(user_account_query + ";" + student_category_query + ";" + student_expertise_query + ";" + student_education_query + ";" + student_experience_query + ";" + student_languages_query + ";" + student_project_query + ";" + student_certificate_query, function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 					var user_account_details = result;
+					var path = result[0][0]['profile_photo'];
+					if (!fs.existsSync(path)) {
+						result[0][0]['profile_photo'] = "";
+					} 
 					
 					let return_response = {
 						"user_account_data" : result[0],
