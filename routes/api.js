@@ -45,6 +45,8 @@ var storage = multer.diskStorage({
       callback(null, constants.image_folder + 'profile_picture')
     } else if (file.fieldname == "license_document") {
       callback(null, constants.upload_folder + 'license_document')
+    } else if (file.fieldname == "uploaded_jd") {
+      callback(null, constants.upload_folder + 'job_description')
     }
   },
   filename: function (req, file, cb) {
@@ -164,7 +166,11 @@ router.post('/user/add_update_profile_hourlyrate', userModel.add_update_profile_
   // res.json({ status : res.status, message: res.message });
 });
 
-router.post('/user/add_update_profile_title_overview', userModel.add_update_profile_title_overview, function (req, res, callback) {
+/*router.post('/user/add_update_profile_title_overview', userModel.add_update_profile_title_overview, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});*/
+
+router.post('/user/add_update_profile_title_overview/',uploads.single('uploaded_jd'),  userModel.add_update_profile_title_overview, function(req, res, callback){
   // res.json({ status : res.status, message: res.message });
 });
 
@@ -230,6 +236,10 @@ router.post('/user/update_profile_job_location_preference', userModel.update_pro
 });
 
 router.post('/user/update_profile_timeline_hiring', userModel.update_profile_timeline_hiring, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/remove_job_description', userModel.remove_job_description, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
 
