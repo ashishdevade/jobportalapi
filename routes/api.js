@@ -9,6 +9,7 @@ var constants = require('../config/constants');
 
 // Models - start 
 var userModel = require('../models/user.model');
+var testModel = require('../models/test.model');
 // Models - end
 const bodyParser = require('body-parser');
 
@@ -96,11 +97,9 @@ router.post('/user/get_all_categories', userModel.get_all_categories, function (
   // res.json({ status : res.status, message: res.message });
 });
 
-
 router.post('/user/get_all_subcategories', userModel.get_all_subcategories, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
-
 
 router.post('/user/update_profile_category', userModel.update_profile_category, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
@@ -240,6 +239,19 @@ router.post('/user/update_profile_timeline_hiring', userModel.update_profile_tim
 });
 
 router.post('/user/remove_job_description', userModel.remove_job_description, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/get_all_industries', userModel.get_all_industries, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/user/get_job_profile', userModel.get_job_profile, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+
+router.post('/user/send_test_mail', testModel.send_test_mail, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
 

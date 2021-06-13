@@ -377,6 +377,79 @@ CREATE TABLE `hiring_manager` (
 
 TRUNCATE `hiring_manager`;
 
+DROP TABLE IF EXISTS `industry`;
+CREATE TABLE `industry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `industry_name` varchar(200) NOT NULL,
+  `access_type` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+TRUNCATE `industry`;
+INSERT INTO `industry` (`id`, `industry_name`, `access_type`) VALUES
+(1,	'AGRICULTURE AND ALLIED INDUSTRIES',	'Company'),
+(2,	'AUTOMOBILES',	'Company'),
+(3,	'AUTO COMPONENTS',	'Company'),
+(4,	'AVIATION',	'Company'),
+(5,	'BANKING',	'Company'),
+(6,	'BIOTECHNOLOGY',	'Company'),
+(7,	'CEMENT',	'Company'),
+(8,	'CHEMICALS',	'Company'),
+(9,	'CONSUMER DURABLES',	'Company'),
+(10,	'DEFENCE MANUFACTURING',	'Company'),
+(11,	'E-COMMERCE',	'Company'),
+(12,	'EDUCATION AND TRAINING',	'Company'),
+(13,	'ELECTRONICS SYSTEM DESIGN & MANUFACTURING',	'Company'),
+(14,	'ENGINEERING AND CAPITAL GOODS',	'Company'),
+(15,	'FINANCIAL SERVICES',	'Company'),
+(16,	'FMCG',	'Company'),
+(17,	'GEMS AND JEWELLERY',	'Company'),
+(18,	'HEALTHCARE',	'Company'),
+(19,	'INFRASTRUCTURE',	'Company'),
+(20,	'INSURANCE',	'Company'),
+(21,	'IT & BPM',	'Company'),
+(22,	'MANUFACTURING',	'Company'),
+(23,	'MEDIA AND ENTERTAINMENT',	'Company'),
+(24,	'MEDICAL DEVICES',	'Company'),
+(25,	'METALS AND MINING',	'Company'),
+(26,	'MSME',	'Company'),
+(27,	'OIL AND GAS',	'Company'),
+(28,	'PHARMACEUTICALS',	'Company'),
+(29,	'PORTS',	'Company'),
+(30,	'POWER',	'Company'),
+(31,	'RAILWAYS',	'Company'),
+(32,	'REAL ESTATE',	'Company'),
+(33,	'RENEWABLE ENERGY',	'Company'),
+(34,	'RETAIL',	'Company'),
+(35,	'ROADS',	'Company'),
+(36,	'SCIENCE AND TECHNOLOGY',	'Company'),
+(37,	'SERVICES',	'Company'),
+(38,	'STEEL',	'Company'),
+(39,	'TELECOMMUNICATIONS',	'Company'),
+(40,	'TEXTILES',	'Company'),
+(41,	'TOURISM AND HOSPITALITY',	'Company'),
+(42,	'Advertising ',	'Student'),
+(43,	'Agriculture',	'Student'),
+(44,	'Banking',	'Student'),
+(45,	'Construction',	'Student'),
+(46,	'Digital Sales and Media',	'Student'),
+(47,	'E-Commerce',	'Student'),
+(48,	'Education',	'Student'),
+(49,	'Energy and Utilities',	'Student'),
+(50,	'Finance',	'Student'),
+(51,	'Government',	'Student'),
+(52,	'Healthcare (Hospital) ',	'Student'),
+(53,	'Healthcare and Insurance',	'Student'),
+(54,	'Internet related services and Products (e.g., Google)',	'Student'),
+(55,	'Manufacturing and Natural Resources (such as oil, minerals, gas, metals, agricultural products, etc)',	'Student'),
+(56,	'Media and Entertainment',	'Student'),
+(57,	'News and Media',	'Student'),
+(58,	'Pharmaceutical',	'Student'),
+(59,	'Retail',	'Student'),
+(60,	'Sports',	'Student'),
+(61,	'Telecommunication',	'Student'),
+(62,	'Transportation',	'Student');
+
 DROP TABLE IF EXISTS `job`;
 CREATE TABLE `job` (
   `job_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -396,6 +469,19 @@ CREATE TABLE `job` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `job`;
+
+DROP TABLE IF EXISTS `job_profiles`;
+CREATE TABLE `job_profiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `profile_name` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+TRUNCATE `job_profiles`;
+INSERT INTO `job_profiles` (`id`, `profile_name`) VALUES
+(1,	'Data Analytics'),
+(2,	'Data Engineering'),
+(3,	'Data Science');
 
 DROP TABLE IF EXISTS `language_list`;
 CREATE TABLE `language_list` (
@@ -5075,14 +5161,16 @@ CREATE TABLE `student_category` (
   `student_category_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` bigint(20) NOT NULL,
   `subcategory_id` bigint(20) NOT NULL,
+  `industry_description` text NOT NULL,
+  `team_department` varchar(200) NOT NULL,
   `student_id` bigint(20) NOT NULL,
   PRIMARY KEY (`student_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `student_category`;
-INSERT INTO `student_category` (`student_category_id`, `category_id`, `subcategory_id`, `student_id`) VALUES
-(1,	11,	75,	1),
-(2,	11,	75,	12);
+INSERT INTO `student_category` (`student_category_id`, `category_id`, `subcategory_id`, `industry_description`, `team_department`, `student_id`) VALUES
+(1,	3,	45,	'Why Agriculture Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)\n \nWhy Agriculture Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)\n',	'',	1),
+(2,	3,	75,	'',	'Software development Department',	12);
 
 DROP TABLE IF EXISTS `student_certificate`;
 CREATE TABLE `student_certificate` (
@@ -5145,8 +5233,8 @@ INSERT INTO `student_experience` (`student_experience_id`, `student_id`, `compan
 DROP TABLE IF EXISTS `student_expertise`;
 CREATE TABLE `student_expertise` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `skills` longtext NOT NULL,
-  `others` longtext NOT NULL,
+  `skills` longtext,
+  `others` longtext,
   `level` int(11) DEFAULT NULL COMMENT '1 - entry level, 2 - intermediate, 3 - expert ',
   `student_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -5154,7 +5242,8 @@ CREATE TABLE `student_expertise` (
 
 TRUNCATE `student_expertise`;
 INSERT INTO `student_expertise` (`id`, `skills`, `others`, `level`, `student_id`) VALUES
-(2,	'[{\"id\":4,\"name\":\"Python\"},{\"id\":15,\"name\":\"SAP Analytics Cloud\"},{\"id\":29,\"name\":\"Oracle Data Integrator \"},{\"id\":58,\"name\":\"Amazon Neptune \"},{\"id\":60,\"name\":\"Azure Cosmos DB \"},{\"id\":63,\"name\":\"IBM DB2 \"},{\"id\":66,\"name\":\"Neo4j \"}]',	'Software development, system administrator, application design updated',	3,	1);
+(2,	'[{\"id\":4,\"name\":\"Python\"},{\"id\":15,\"name\":\"SAP Analytics Cloud\"},{\"id\":29,\"name\":\"Oracle Data Integrator \"},{\"id\":58,\"name\":\"Amazon Neptune \"},{\"id\":60,\"name\":\"Azure Cosmos DB \"},{\"id\":63,\"name\":\"IBM DB2 \"},{\"id\":66,\"name\":\"Neo4j \"}]',	'Software development, system administrator, application design updated',	3,	1),
+(3,	'\"\"',	'',	1,	12);
 
 DROP TABLE IF EXISTS `student_languages`;
 CREATE TABLE `student_languages` (
@@ -5168,8 +5257,9 @@ CREATE TABLE `student_languages` (
 
 TRUNCATE `student_languages`;
 INSERT INTO `student_languages` (`id`, `student_id`, `language_id`, `language_name`, `proficiency`) VALUES
-(61,	1,	NULL,	'Hindi',	'Conversational'),
-(60,	1,	NULL,	'English',	'Basic');
+(67,	1,	NULL,	'Arabic',	'Basic'),
+(66,	1,	NULL,	'Hindi',	'Conversational'),
+(65,	1,	NULL,	'English',	'Basic');
 
 DROP TABLE IF EXISTS `student_project`;
 CREATE TABLE `student_project` (
@@ -5329,8 +5419,10 @@ CREATE TABLE `user_account` (
   `service_fees` varchar(200) DEFAULT NULL,
   `receive_rate` varchar(200) DEFAULT NULL,
   `company_name` varchar(200) DEFAULT NULL,
+  `industry` varchar(200) DEFAULT NULL,
   `job_title` text,
   `professional_overview` longtext,
+  `uploaded_jd` text,
   `country` varchar(100) DEFAULT NULL,
   `country_id` varchar(100) DEFAULT NULL,
   `state` varchar(100) DEFAULT NULL,
@@ -5343,15 +5435,22 @@ CREATE TABLE `user_account` (
   `job_type` varchar(100) DEFAULT NULL,
   `profile_photo` longtext,
   `location_preference` int(11) DEFAULT NULL COMMENT '1 = remote,  2 = onsite ',
+  `prefered_country_id` int(11) DEFAULT NULL,
+  `prefered_country` varchar(200) DEFAULT NULL,
+  `prefered_state_id` int(11) DEFAULT NULL,
+  `prefered_state` varchar(200) DEFAULT NULL,
   `location_preference_name` varchar(200) DEFAULT NULL,
+  `prefered_street_address` varchar(200) DEFAULT NULL,
+  `prefered_zipcode` varchar(200) DEFAULT NULL,
   `timeline_hiring` int(11) DEFAULT NULL,
-  `timeline_hiring_weeks` int(11) DEFAULT NULL,
+  `timeline_hiring_weeks` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`user_account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `user_account`;
-INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `job_title`, `professional_overview`, `country`, `country_id`, `state`, `state_id`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `location_preference_name`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	7,	'50',	'35000',	'-4.00',	'16',	NULL,	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nmean stack developer\nFull stack developermean stack developer\nFull stack developermean stack developer\nFull stack developer',	'India',	'105',	'Madhya Pradesh',	'1503',	'Bhopal',	'194-B Clerk Colony Indore M.P',	'452011',	'91',	'9996547821',	'5',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL),
-(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	6,	'',	'55000',	'',	'',	'MI 6 secret Service',	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer and mean stack developer',	'India',	'105',	'Madhya Pradesh',	'1503',	'Indore',	'194-B Clerk Colony Indore M.P',	'452001',	'',	'',	'2',	NULL,	2,	'india ',	2,	19);
+INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	1,	'50',	'3500',	'-4.00',	'16',	NULL,	NULL,	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'105',	'Madhya Pradesh',	'1503',	'Bhopal',	'194 B Clerk Colony Indore M.P',	'452011',	'91',	'9996547821',	'3',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	1,	'200',	'80000',	'',	'',	'MI 6 secret Service',	NULL,	'Full stack developer',	'Full stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer',	'',	'India',	'105',	'Madhya Pradesh',	'1503',	'Indore',	'194-B Clerk Colony Indore M.P',	'452001',	'',	'',	'2',	NULL,	2,	237,	'United Kingdom',	3898,	'Barnsley',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	2,	'5 - 8'),
+(14,	'Company',	'j.meenesh1@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	0,	NULL,	NULL,	NULL,	NULL,	'Home',	'11',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
--- 2021-05-21 18:24:33
+-- 2021-06-13 08:33:58
