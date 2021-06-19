@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator')
 var db = require('../config/database');
 var constants = require('../config/constants');
 var common_functions = require('../config/common.function');
+var email_functions = require('../config/email.function');
 var async = require('async');
 var md5 = require('md5');
 const bodyParser = require('body-parser');
@@ -47,4 +48,18 @@ module.exports.send_test_mail = async function (req, res, next) {
 	} else {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 	}
+}
+
+module.exports.send_test_mail_with_body = function (req, res, next) {
+	email_functions.send_registration_mail("James Bond", "j.meenesh@gmail.com", "absdf1234556adasd", (response)=>{
+		console.log("response ", response);
+		if(response == true){
+			return res.status(200).send({ code: 200, msg: 'Mail Sent Successfully' });
+			
+		} else{
+			
+			return res.status(500).send({ code: 600, msg: 'Unable to send email' });
+		}
+	});
+	
 }

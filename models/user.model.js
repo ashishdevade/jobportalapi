@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator')
 var db = require('../config/database');
 var constants = require('../config/constants');
 var common_functions = require('../config/common.function');
+var email_functions = require('../config/email.function');
 var async = require('async');
 var md5 = require('md5');
 const bodyParser = require('body-parser');
@@ -27,7 +28,7 @@ module.exports.validate_login = function (req, res, next) {
 		var email = (req.body.email != undefined && req.body.email != null) ? req.body.email : "";
 		var password = (req.body.password != undefined && req.body.password != null) ? req.body.password : "";
 		if (email != "" && password != "") {
-			var login_query = "SELECT * FROM user_account WHERE email_id = '" + email + "' AND password = MD5(" + password + ") ";
+			var login_query = "SELECT * FROM user_account WHERE email_id = '" + email + "' AND password = MD5('" + password + "') ";
 			console.log("login_query ", login_query);
 			db.query(login_query, function (err, result, fields) {
 				if (err) return res.status(200).send({ status: 500, data: err });
@@ -64,8 +65,8 @@ module.exports.register_user = function (req, res, next) {
 		db.query("SELECT * FROM user_account WHERE email_id = '" + email + "'", function (err, result, fields) {
 			if (err) return res.status(200).send({ status: 500, data: err });
 			if (result.length == 0) {
-				var sqlQuery = 'INSERT INTO user_account SET account_type = ? , first_name = ? , last_name = ? , email_id = ? , password = ?, user_name = ?, company_name = ?, industry = ? ';
-				var data = [account_type, firstname, lastname, email, md5(password), firstname, company_name, industry];
+				var sqlQuery = 'INSERT INTO user_account SET account_type = ? , first_name = ? , last_name = ? , email_id = ? , password = ?, user_name = ?, company_name = ?, industry = ?, is_registered_complete = ? ';
+				var data = [account_type, firstname, lastname, email, md5(password), firstname, company_name, industry, 0];
 				db.query(sqlQuery, data, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					if (result.insertId > 0) {
@@ -80,9 +81,16 @@ module.exports.register_user = function (req, res, next) {
 							"company_name": company_name,
 							"industry": industry,
 						}
-
-						return res.status(200).send({ status: 200, data: resultset });
-
+						
+						var full_name = firstname + ' ' + lastname;
+						email_functions.send_registration_mail(full_name, email, password, (response)=>{
+							console.log("response ", response);
+							if(response == true){
+								return res.status(200).send({ status: 200, data: resultset });
+							} else{
+								return res.status(500).send({ code: 600, msg: 'Unable to send email' });
+							}
+						});
 					} else {
 						return res.status(201).send({ status: 201, msg: 'user not created. Something went wrong' });
 					}
@@ -105,7 +113,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 		var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		if(type!= ""){
 			if(type == 'category'){
-				db.query("SELECT sc.*, cat.name as category_name,  subcategory_name FROM student_category as sc LEFT JOIN  category as cat ON sc.category_id = cat.category_id LEFT JOIN subcategories as subcat ON sc.subcategory_id = subcat.id WHERE student_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT sc.*, cat.profile_name as profile_name,  industry_name FROM student_category as sc  LEFT JOIN  job_profiles  as cat ON sc.category_id = cat.id LEFT JOIN industry as subcat ON sc.subcategory_id = subcat.id  WHERE student_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -195,7 +203,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				});
 				
 			} else if(type == "user-account") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
 				db.query(user_account_query, function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 					var path = result[0]['profile_photo'];
@@ -218,8 +226,8 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			}  else if(type == "review") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'";
-				var student_category_query = "SELECT sc.*, cat.name as category_name,  subcategory_name FROM student_category as sc LEFT JOIN  category as cat ON sc.category_id = cat.category_id LEFT JOIN subcategories as subcat ON sc.subcategory_id = subcat.id WHERE student_id = '"+user_id+"'"
+				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var student_category_query = "SELECT sc.*, cat.profile_name as profile_name,  industry_name FROM student_category as sc  LEFT JOIN  job_profiles  as cat ON sc.category_id = cat.id LEFT JOIN industry as subcat ON sc.subcategory_id = subcat.id  WHERE student_id = '"+user_id+"'"
 				var student_expertise_query = "SELECT * FROM student_expertise WHERE student_id = '"+user_id+"'";
 				var student_education_query = "SELECT * FROM student_education WHERE student_id = '"+user_id+"'";
 				var student_experience_query = "SELECT * FROM student_experience WHERE student_id = '"+user_id+"'";
@@ -619,7 +627,15 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 		var company_name     = (req.body.company_name != undefined && req.body.company_name != null) ? req.body.company_name : "";
 		var job_title        = (req.body.job_title != undefined && req.body.job_title != null) ? req.body.job_title : "";
 		var location         = (req.body.location != undefined && req.body.location != null) ? req.body.location : "";
+		
+		//var country          = (req.body.country != undefined && req.body.country != null) ? req.body.country : "";
+		var country_id       = (req.body.country_id != undefined && req.body.country_id != null) ? req.body.country_id : "";
 		var country          = (req.body.country != undefined && req.body.country != null) ? req.body.country : "";
+		var state_id         = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
+		var state            = (req.body.state != undefined && req.body.state != null) ? req.body.state : "";
+		var location         = (req.body.location != undefined && req.body.location != null) ? req.body.location : "";
+		var zipcode          = (req.body.zipcode != undefined && req.body.zipcode != null) ? req.body.zipcode : "";
+		
 		var from_month       = (req.body.from_month != undefined && req.body.from_month != null) ? req.body.from_month : "";
 		var from_year        = (req.body.from_year != undefined && req.body.from_year != null) ? req.body.from_year : "";
 		var to_month         = (req.body.to_month != undefined && req.body.to_month != null) ? req.body.to_month : "";
@@ -632,8 +648,14 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 			var data = {
 				"company_name" : company_name,
 				"job_title" : job_title,
-				"location" : location,
+				// "country" : country,
+				"country_id" : country_id,
 				"country" : country,
+				"state_id" : state_id,
+				"state" : state,
+				"location" : location,
+				"zipcode" : zipcode,
+				
 				"from_month" : from_month,
 				"from_year" : from_year,
 				"to_year" : to_year,
@@ -670,7 +692,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 				}
 			});
 		} else {
-			var sqlQuery = 'UPDATE student_experience SET company_name = "'+ company_name +'", job_title = "'+ job_title +'", location = "'+ location +'", country = "'+ country +'", from_month = "'+ from_month +'", from_year = "'+ from_year +'", to_month = "'+ to_month +'", to_year = "'+ to_year +'", job_description = "'+ job_description +'" WHERE student_id = "'+user_id+'" AND student_experience_id = "'+experience_id+'" ';
+			var sqlQuery = 'UPDATE student_experience SET company_name = "'+ company_name +'", job_title = "'+ job_title +'", location = "'+ location +'", country_id = "'+ country_id +'", country = "'+ country +'", state_id = "'+ state_id +'", state = "'+ state +'", zipcode = "'+ zipcode +'", from_month = "'+ from_month +'", from_year = "'+ from_year +'", to_month = "'+ to_month +'", to_year = "'+ to_year +'", job_description = "'+ job_description +'" WHERE student_id = "'+user_id+'" AND student_experience_id = "'+experience_id+'" ';
 			db.query(sqlQuery, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 				
@@ -740,7 +762,7 @@ module.exports.delete_employment = function (req, res, next) {
 
 module.exports.get_language_list = function (req, res, next) {
 	
-	db.query("SELECT id, name FROM language_list GROUP BY name order by name asc", function (err, result, fields) {
+	db.query("SELECT DISTINCT id, name FROM language_list order by name asc", function (err, result, fields) {
 		if (err) return res.status(200).send({ status: 500, data: err });
 
 		return res.status(200).send({ status: 200, data: result });
@@ -1293,3 +1315,74 @@ module.exports.get_all_industries = function (req, res, next) {
 	} 
 }
 
+
+module.exports.change_password = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		var old_pass = (req.body.old_pass != undefined && req.body.old_pass != null) ? req.body.old_pass : "";
+		var new_pass = (req.body.new_pass != undefined && req.body.new_pass != null) ? req.body.new_pass : "";
+		var user_select_query = "SELECT * FROM user_account WHERE user_account_id = '" + user_id + "' ";
+		
+		db.query(user_select_query, function (err, resultset, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+			console.log("otp ", resultset[0]['password'])
+			console.log("new pass  ", md5(old_pass))
+			if(resultset[0]['password'] == md5(old_pass)){
+				var updateUser = 'UPDATE user_account SET is_registered_complete = "1", password = MD5("' + new_pass + '") WHERE user_account_id = "'+ user_id +'"';
+				db.query(updateUser, function (error, result, fields) {
+					if (error) return res.status(500).send({ status: 600, msg: error.message });
+					
+					var full_name = resultset[0]['first_name'] + ' ' + resultset[0]['last_name'];
+					email_functions.password_changed(full_name, resultset[0]['email_id'], (response)=>{
+						console.log("response ", response);
+						if(response == true){
+							return res.status(200).send({ status: 200, data: resultset });
+						} else{
+							return res.status(500).send({ code: 600, msg: 'Unable to send email' });
+						}
+					});
+					
+				});	
+			} else {
+				return res.status(200).send({ code: 600, msg: 'Password Doesnt Match', data : [] });
+			}
+			
+		});
+		
+		
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.forgot_password = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var email_id  = (req.body.email_id != undefined && req.body.email_id != null) ? req.body.email_id : "";
+		var temp_password = (req.body.temp_pass != undefined && req.body.temp_pass != null) ? req.body.temp_pass : "";
+		
+		var user_select_query = "SELECT * FROM user_account WHERE email_id = '" + email_id + "' ";
+		db.query(user_select_query, function (err, resultset, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+			if(resultset.length > 0){
+				var updateUser = 'UPDATE user_account SET is_registered_complete = "0", password = MD5("' + temp_password + '") WHERE email_id = "'+ email_id +'"';
+				db.query(updateUser, function (error, result, fields) {
+					if (error) return res.status(500).send({ status: 600, msg: error.message });
+					var full_name = resultset[0]['first_name'] + ' ' + resultset[0]['last_name'];
+					email_functions.forgot_password_mail(full_name, email_id, temp_password, (response)=>{
+						console.log("response ", response);
+						if(response == true){
+							return res.status(200).send({ status: 200, data: resultset });
+						} else{
+							return res.status(500).send({ code: 600, msg: 'Unable to send email' });
+						}
+					});
+				});	
+			} else {
+				return res.status(200).send({ code: 600, msg: 'Email Address Invalid', data : [] });
+			}
+			
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}

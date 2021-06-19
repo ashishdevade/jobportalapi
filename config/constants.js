@@ -6,5 +6,5 @@ module.exports =  {
 	"smtp_port":587,
 	"smtp_user":"ashish.devade456@gmail.com",
 	"smtp_pass":"Ashish@123",
-	"smtp_username":"Zestbook App",
+	"smtp_username":' "Zestboard App" contact@zestboard.com',
 }
