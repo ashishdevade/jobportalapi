@@ -90,3 +90,8 @@ ALTER TABLE `student_category`
 ADD `industry_description` text NOT NULL AFTER `subcategory_id`;
 
 -- Alter 9 june 2021 (unpublished) END
+
+-- ALter 21 june - start 
+ALTER TABLE `student_category`
+CHANGE `team_department` `team_department` varchar(200) COLLATE 'utf8_general_ci' NULL AFTER `industry_description`;
+-- alter 21 june - end 

@@ -79,7 +79,7 @@ exports.send_registration_mail = function (username, email, temp_password, callb
 	</table>
 	<br>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: flex; flex-wrap: wrap; text-align: center; margin: 0px auto;">
-	<a href="http://18.116.55.85/app/#/auth/login" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
+	<a href="http://zestboard.com/app/#/auth/login" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
 	cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: transparent; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; text-decoration: none;     color: #fff !important; background-color: #007bff; border-color: #007bff;	font-weight: 700;">Go to zestboard &#8594;</a>
 	
 	</div>
@@ -130,20 +130,13 @@ exports.forgot_password_mail = function(username, email, temp_password, callback
 	</div>
 	<hr>
 	<div style="">
-	<h4 style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"><b>Hello `+ username +`, </b> <br> <br> At your request, we are here to reset your password. <br><br> Please use the below temporary password  to login into your account - </h4>
+	<h4 style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"><b>Hello `+ username +`, </b> <br> <br> At your request, we are here to reset your password. <br><br> Please click the link below, which will prompt you to create a new password.</h4>
 	</div>
-	<table style="text-align: left; width: 100%; margin-left: 0%;">
-	<tbody style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 14px ; ">
-	<tr>
-	<th style="color: #000000; width:30%; height: 30px;">Temp. Password</th>
-	<td>`+ temp_password +`<br></td>
-	</tr>
-	</tbody>
-	</table>
+	 
 	<br>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: flex; flex-wrap: wrap; text-align: center; margin: 0px auto;">
-	<a href="http://18.116.55.85/app/#/auth/login" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
-	cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: transparent; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; text-decoration: none;     color: #fff !important; background-color: #007bff; border-color: #007bff;	font-weight: 700;">Go to zestboard &#8594;</a>
+	<a href="http://zestboard.com/app/#/auth/change-otp/`+temp_password+`" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
+	cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: transparent; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; text-decoration: none;     color: #fff !important; background-color: #007bff; border-color: #007bff;	font-weight: 700;">Reset Password &#8594;</a>
 	
 	</div>
 	<hr>
@@ -204,7 +197,7 @@ exports.password_changed = function(username, email, callback) {
 	 
 	<br>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: flex; flex-wrap: wrap; text-align: center; margin: 0px auto;">
-	<a href="http://18.116.55.85/app/#/auth/login" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
+	<a href="http://zestboard.com/app/#/auth/login" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
 	cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: transparent; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; text-decoration: none;     color: #fff !important; background-color: #007bff; border-color: #007bff;	font-weight: 700;">Go to zestboard &#8594;</a>
 	
 	</div>

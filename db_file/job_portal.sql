@@ -5,8 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP DATABASE IF EXISTS `job_portal`;
-CREATE DATABASE `job_portal` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `job_portal`;
 
 DROP TABLE IF EXISTS `authorise`;
@@ -387,47 +385,47 @@ CREATE TABLE `industry` (
 
 TRUNCATE `industry`;
 INSERT INTO `industry` (`id`, `industry_name`, `access_type`) VALUES
-(1,	'AGRICULTURE AND ALLIED INDUSTRIES',	'Company'),
-(2,	'AUTOMOBILES',	'Company'),
-(3,	'AUTO COMPONENTS',	'Company'),
-(4,	'AVIATION',	'Company'),
-(5,	'BANKING',	'Company'),
-(6,	'BIOTECHNOLOGY',	'Company'),
-(7,	'CEMENT',	'Company'),
-(8,	'CHEMICALS',	'Company'),
-(9,	'CONSUMER DURABLES',	'Company'),
-(10,	'DEFENCE MANUFACTURING',	'Company'),
-(11,	'E-COMMERCE',	'Company'),
-(12,	'EDUCATION AND TRAINING',	'Company'),
-(13,	'ELECTRONICS SYSTEM DESIGN & MANUFACTURING',	'Company'),
-(14,	'ENGINEERING AND CAPITAL GOODS',	'Company'),
-(15,	'FINANCIAL SERVICES',	'Company'),
-(16,	'FMCG',	'Company'),
-(17,	'GEMS AND JEWELLERY',	'Company'),
-(18,	'HEALTHCARE',	'Company'),
-(19,	'INFRASTRUCTURE',	'Company'),
-(20,	'INSURANCE',	'Company'),
-(21,	'IT & BPM',	'Company'),
-(22,	'MANUFACTURING',	'Company'),
-(23,	'MEDIA AND ENTERTAINMENT',	'Company'),
-(24,	'MEDICAL DEVICES',	'Company'),
-(25,	'METALS AND MINING',	'Company'),
-(26,	'MSME',	'Company'),
-(27,	'OIL AND GAS',	'Company'),
-(28,	'PHARMACEUTICALS',	'Company'),
-(29,	'PORTS',	'Company'),
-(30,	'POWER',	'Company'),
-(31,	'RAILWAYS',	'Company'),
-(32,	'REAL ESTATE',	'Company'),
-(33,	'RENEWABLE ENERGY',	'Company'),
-(34,	'RETAIL',	'Company'),
-(35,	'ROADS',	'Company'),
-(36,	'SCIENCE AND TECHNOLOGY',	'Company'),
-(37,	'SERVICES',	'Company'),
-(38,	'STEEL',	'Company'),
-(39,	'TELECOMMUNICATIONS',	'Company'),
-(40,	'TEXTILES',	'Company'),
-(41,	'TOURISM AND HOSPITALITY',	'Company'),
+(1,	'Agriculture And Allied Industries',	'Company'),
+(2,	'Automobiles',	'Company'),
+(3,	'Auto Components',	'Company'),
+(4,	'Aviation',	'Company'),
+(5,	'Banking',	'Company'),
+(6,	'Biotechnology',	'Company'),
+(7,	'Cement',	'Company'),
+(8,	'Chemicals',	'Company'),
+(9,	'Consumer Durables',	'Company'),
+(10,	'Defence Manufacturing',	'Company'),
+(11,	'E-commerce',	'Company'),
+(12,	'Education And Training',	'Company'),
+(13,	'Electronics System Design & Manufacturing',	'Company'),
+(14,	'Engineering And Capital Goods',	'Company'),
+(15,	'Financial Services',	'Company'),
+(16,	'Fmcg',	'Company'),
+(17,	'Gems And Jewellery',	'Company'),
+(18,	'Healthcare',	'Company'),
+(19,	'Infrastructure',	'Company'),
+(20,	'Insurance',	'Company'),
+(21,	'It & Bpm',	'Company'),
+(22,	'Manufacturing',	'Company'),
+(23,	'Media And Entertainment',	'Company'),
+(24,	'Medical Devices',	'Company'),
+(25,	'Metals And Mining',	'Company'),
+(26,	'Msme',	'Company'),
+(27,	'Oil And Gas',	'Company'),
+(28,	'Pharmaceuticals',	'Company'),
+(29,	'Ports',	'Company'),
+(30,	'Power',	'Company'),
+(31,	'Railways',	'Company'),
+(32,	'Real Estate',	'Company'),
+(33,	'Renewable Energy',	'Company'),
+(34,	'Retail',	'Company'),
+(35,	'Roads',	'Company'),
+(36,	'Science And Technology',	'Company'),
+(37,	'Services',	'Company'),
+(38,	'Steel',	'Company'),
+(39,	'Telecommunications',	'Company'),
+(40,	'Textiles',	'Company'),
+(41,	'Tourism And Hospitality',	'Company'),
 (42,	'Advertising ',	'Student'),
 (43,	'Agriculture',	'Student'),
 (44,	'Banking',	'Student'),
@@ -5160,16 +5158,15 @@ DROP TABLE IF EXISTS `student_category`;
 CREATE TABLE `student_category` (
   `student_category_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` bigint(20) NOT NULL,
-  `subcategory_id` bigint(20) NOT NULL,
-  `industry_description` text NOT NULL,
-  `team_department` varchar(200) NOT NULL,
+  `subcategory_id` bigint(20) NOT NULL DEFAULT '0',
+  `industry_description` text,
+  `team_department` varchar(200) DEFAULT NULL,
   `student_id` bigint(20) NOT NULL,
   PRIMARY KEY (`student_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `student_category`;
 INSERT INTO `student_category` (`student_category_id`, `category_id`, `subcategory_id`, `industry_description`, `team_department`, `student_id`) VALUES
-(1,	3,	45,	'Why Agriculture Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)\n \nWhy Agriculture Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)\n',	'',	1),
 (2,	3,	75,	'',	'Software development Department',	12);
 
 DROP TABLE IF EXISTS `student_certificate`;
@@ -5215,8 +5212,12 @@ CREATE TABLE `student_experience` (
   `student_id` bigint(20) NOT NULL,
   `company_name` varchar(250) NOT NULL,
   `job_title` varchar(250) DEFAULT NULL,
-  `location` varchar(250) DEFAULT NULL,
   `country` varchar(250) DEFAULT NULL,
+  `country_id` int(11) DEFAULT NULL,
+  `state` varchar(200) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `location` varchar(250) DEFAULT NULL,
+  `zipcode` varchar(200) DEFAULT NULL,
   `from_month` varchar(250) DEFAULT NULL,
   `from_year` varchar(250) DEFAULT NULL,
   `to_month` varchar(250) DEFAULT NULL,
@@ -5227,8 +5228,8 @@ CREATE TABLE `student_experience` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `student_experience`;
-INSERT INTO `student_experience` (`student_experience_id`, `student_id`, `company_name`, `job_title`, `location`, `country`, `from_month`, `from_year`, `to_month`, `to_year`, `job_description`) VALUES
-(1,	1,	'Home updated',	'Title 1',	'Location 1',	'4',	'February',	'2020',	'April',	'2021',	'Description 1 ');
+INSERT INTO `student_experience` (`student_experience_id`, `student_id`, `company_name`, `job_title`, `country`, `country_id`, `state`, `state_id`, `location`, `zipcode`, `from_month`, `from_year`, `to_month`, `to_year`, `job_description`) VALUES
+(2,	1,	'Test company',	'software dev',	'Indonesia',	106,	'Bengkulu',	1522,	'Location 1',	'',	'January',	'2012',	'January',	'2019',	'');
 
 DROP TABLE IF EXISTS `student_expertise`;
 CREATE TABLE `student_expertise` (
@@ -5414,6 +5415,7 @@ CREATE TABLE `user_account` (
   `password` varchar(255) DEFAULT NULL,
   `user_name` varchar(255) DEFAULT NULL,
   `profile_completed` int(11) DEFAULT '0',
+  `is_registered_complete` int(11) DEFAULT '0',
   `hourly_rate` varchar(200) DEFAULT NULL,
   `salary_expectation` varchar(200) DEFAULT NULL,
   `service_fees` varchar(200) DEFAULT NULL,
@@ -5448,9 +5450,8 @@ CREATE TABLE `user_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `user_account`;
-INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	1,	'50',	'3500',	'-4.00',	'16',	NULL,	NULL,	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'105',	'Madhya Pradesh',	'1503',	'Bhopal',	'194 B Clerk Colony Indore M.P',	'452011',	'91',	'9996547821',	'3',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	1,	'200',	'80000',	'',	'',	'MI 6 secret Service',	NULL,	'Full stack developer',	'Full stack developer and mean stack developerFull stack developer and mean stack developerFull stack developer',	'',	'India',	'105',	'Madhya Pradesh',	'1503',	'Indore',	'194-B Clerk Colony Indore M.P',	'452001',	'',	'',	'2',	NULL,	2,	237,	'United Kingdom',	3898,	'Barnsley',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	2,	'5 - 8'),
-(14,	'Company',	'j.meenesh1@gmail.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	0,	NULL,	NULL,	NULL,	NULL,	'Home',	'11',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `is_registered_complete`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `street_address`, `zipcode`, `country_calling_code`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	14,	1,	'50',	'3500',	'-4.00',	'16',	NULL,	NULL,	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'105',	'Madhya Pradesh',	'1503',	'Bhopal',	'194 B Clerk Colony Indore M.P',	'452011',	'91',	'9996547821',	'4',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	8,	1,	'200',	'80000',	'',	'',	'MI 6 secret Service',	NULL,	'Data Analytics',	'\'HOW YOU\'LL HELP US KEEP CLIMBING (OVERVIEW & KEY RESPONSIBILITIES)\nThe Operational Analytics  team provides strategic insight through first understanding business processes and second leveraging data and analytics to drive continuous improvement efforts. The Analytics Specialist will be asked to work closely with leaders to develop creative solutions to current business challenges. We are looking for data curious individuals that seek to understand process and can connect with our business partners to leverage data and drive improvement.\n\nData has transformed the way Delta operates. The Operational Analytics team is the core of the data strategy, focused on designing the future data environment. The team’s mission is to democratize data building and maintain a data structure that facilitates analysis efforts, KPI creation, Monthly Performance Reporting (MPR), report automation, and front-line analysis tools. You’ll be empowered to constantly innovate data architecture to enable more complex analytic techniques like machine learning. For example, you may be asked to create executive reporting and interactive dashboard tools that monitor Delta’s fuel cost, taking the project from source data curation to delivering recommendations to front-line leaders. The Analytics Specialist will\n\nLocate and extract data from a variety of sources for use in analysis, models and reporting\nAggregate views of data sources into meaningful hierarchies\nDevelop automated reports and analyses with direction from other senior members on the team\nSupport process improvement and project management engagements for both individual business units and cross-divisional initiatives\nPresent findings to Operational Analytics leaders\nPractice safety-conscious behaviors in all operational processes and procedures\nHave a team first attitude with the success of our team and business partners as their top priority\nBe intellectually curious, ask questions and speak up when they have an idea\nBe \"Do-ers\" and are not afraid of failure, but instead learn from each experience and improve\nBe independent workers who look for problems to solve and then come up with innovative ideas\nMake things happen without frequent management direction and know when to communicate status or escalate issues to their manager, teammates or stakeholders.\nEnjoy working in a high-profile environment with fluid priorities, ambiguity and extremely aggressive deadlines.\n\nWHAT YOU NEED TO SUCCEED (MINIMUM QUALIFICATIONS)\nEmbraces diverse people, thinking and styles\nConsistently makes safety and security, of self and others, the priority\nHigh School diploma, GED or High School Equivalency\nWhere permitted by applicable law, must have received or be willing to receive the COVID-19 vaccine by date of hire to be considered for U.S.-based job, if not currently employed by Delta Air Lines, Inc.\n3 years work experience in analysis, information science, data visualization, or other relevant quantitative field preferred.\nPrevious experience identifying, cleaning, and structuring new data sources preferred\nMust be comfortable working in group and individual settings.\nSuccessful candidates will have experience with some or all of the following: SQL, SAS, R, Tableau or other database interface tools and languages like Visual Basic, Perl, Python, UNIX or other basic functional programming tools\n\'',	'uploads/job_description/uploaded_jd-1624642287782.pdf',	'India',	'105',	'Madhya Pradesh',	'1503',	'Indore',	'194-B Clerk Colony Indore M.P',	'452001',	'',	'',	'2',	NULL,	2,	237,	'United Kingdom',	3898,	'Barnsley',	'indore',	'194-B Clerk Colony Indore M.P',	'452001',	2,	'5 - 8');
 
--- 2021-06-13 08:33:58
+-- 2021-06-25 19:20:49

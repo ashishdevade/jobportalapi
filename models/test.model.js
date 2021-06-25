@@ -63,3 +63,37 @@ module.exports.send_test_mail_with_body = function (req, res, next) {
 	});
 	
 }
+
+module.exports.remove_user_with_data = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+		
+		var user_account_query = " DELETE FROM user_account WHERE user_account_id = '"+user_id+"'";
+		var student_category_query =  "DELETE FROM student_category WHERE student_id = '"+user_id+"'"
+		var student_expertise_query = " DELETE FROM student_certificate WHERE student_id = '"+user_id+"'";
+		var student_education_query = " DELETE FROM student_education WHERE student_id = '"+user_id+"'";
+		var student_experience_query = " DELETE FROM student_experience WHERE student_id = '"+user_id+"'";
+		var student_languages_query = " DELETE FROM student_languages WHERE student_id = '"+user_id+"'";
+		var student_project_query = " DELETE FROM student_project WHERE student_id = '"+user_id+"'";
+		var student_certificate_query = " DELETE FROM student_record WHERE student_id = '"+user_id+"'";
+		
+		db.query(user_account_query + ";" + student_category_query + ";" + student_expertise_query + ";" + student_education_query + ";" + student_experience_query + ";" + student_languages_query + ";" + student_project_query + ";" + student_certificate_query, function (err, result, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+			 
+			let return_response = {
+				"user_account_data" : result[0],
+				"category_data" : result[1],
+				"expertise_data" : result[2],
+				"education_data" : result[3],
+				"experience_data" : result[4],
+				"languages_data" : result[5],
+				"project_data" : result[6],
+				"certificate_data" : result[7],
+			}
+
+			return res.status(200).send({ status: 200, data: return_response });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}

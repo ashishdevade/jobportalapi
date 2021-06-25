@@ -1,5 +1,7 @@
 var express = require("express");
 const app = express();
+var mysql      = require('mysql2');
+
 const { body, validationResult } = require('express-validator')
 var db = require('../config/database');
 var constants = require('../config/constants');
@@ -204,12 +206,16 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				
 			} else if(type == "user-account") {
 				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
+					// console.log("user_account_query " , user_account_query);
 				db.query(user_account_query, function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
+					// console.log("result " , result[0]);
 					var path = result[0]['profile_photo'];
-					if (!fs.existsSync(path)) {
-						result[0]['profile_photo'] = "";
-					} 
+					if(path != ""){
+						if (!fs.existsSync(path)) {
+							result[0]['profile_photo'] = "";
+						} 
+					}
 					return res.status(200).send({ status: 200, data: result });
 				});
 				
@@ -239,9 +245,11 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 					var user_account_details = result;
 					var path = result[0][0]['profile_photo'];
-					if (!fs.existsSync(path)) {
-						result[0][0]['profile_photo'] = "";
-					} 
+					if(path != ""){
+						if (!fs.existsSync(path)) {
+							result[0][0]['profile_photo'] = "";
+						} 
+					}
 					
 					let return_response = {
 						"user_account_data" : result[0],
@@ -762,7 +770,7 @@ module.exports.delete_employment = function (req, res, next) {
 
 module.exports.get_language_list = function (req, res, next) {
 	
-	db.query("SELECT DISTINCT id, name FROM language_list order by name asc", function (err, result, fields) {
+	db.query("SELECT id, name FROM language_list group by name order by name asc", function (err, result, fields) {
 		if (err) return res.status(200).send({ status: 500, data: err });
 
 		return res.status(200).send({ status: 200, data: result });
@@ -849,7 +857,7 @@ module.exports.add_update_profile_title_overview = function (req, res, next) {
 		var job_title = (req.body.job_title != undefined && req.body.job_title != null) ? req.body.job_title : "";
 		var professional_overview = (req.body.professional_overview != undefined && req.body.professional_overview != null) ? req.body.professional_overview : "";
 		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		var updateUser = 'UPDATE user_account SET profile_completed = "8", job_title = "'+ job_title +'", professional_overview = "'+ professional_overview +'"  '+ additional_parameter  +'  WHERE user_account_id = "'+user_id+'"';
+		var updateUser = 'UPDATE user_account SET profile_completed = "8", job_title = "'+ job_title +'", professional_overview = "'+ mysql.escape(professional_overview) +'"  '+ additional_parameter  +'  WHERE user_account_id = "'+user_id+'"';
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
@@ -1382,6 +1390,24 @@ module.exports.forgot_password = function (req, res, next) {
 			}
 			
 		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.validate_temp_password = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var temp_password = (req.body.temp_password != undefined && req.body.temp_password != null) ? req.body.temp_password : "";
+		if(temp_password!= ""){
+			var check_passowrd = md5(temp_password);
+			db.query("SELECT user_account_id, email_id FROM user_account WHERE password = '"+ check_passowrd +"' LIMIT 1", function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+
+				return res.status(200).send({ status: 200, data: result });
+			});
+		} else {
+			return res.status(200).send({ code: 600, msg: 'Temporary password cannot be blank.' });
+		}
 	}  else {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 	} 

@@ -250,6 +250,10 @@ router.post('/user/get_job_profile', userModel.get_job_profile, function (req, r
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/user/validate_temp_password', userModel.validate_temp_password, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
 router.post('/user/change_password', userModel.change_password, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
@@ -268,6 +272,10 @@ router.post('/test/send_test_mail', testModel.send_test_mail, function (req, res
 });
 
 router.post('/test/send_test_mail_with_body', testModel.send_test_mail_with_body, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/test/remove_user_with_data', testModel.remove_user_with_data, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
 
