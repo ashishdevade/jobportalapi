@@ -85,7 +85,7 @@ exports.send_registration_mail = function (username, email, temp_password, callb
 	</div>
 	<hr>
 	<br>
-	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"> In case you face any issues with registration or logging in, please contact us at our {Email}. Our customer support team will be happy to help you with your queries.
+	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"> In case you face any issues with registration or logging in, please contact us at our support@zestboard.com. Our customer support team will be happy to help you with your queries.
 	</p>
 	<br>
 	<p style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; color: black ;"><b>Thanks & Regards,</b></p>
@@ -93,10 +93,10 @@ exports.send_registration_mail = function (username, email, temp_password, callb
 	</div>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: -webkit-box; flex-wrap: wrap; text-align: center; width: 85%; margin: 0px auto; color: rgb(121, 121, 121); font-size: 12px; padding-top: 15px;">
 	
-	<p style="padding-top:10px; color: #000000; font-size: 13px; text-align: center; margin: 0 auto;">This message was mailed to [<a style="color: #007bff;" href="mailto:student@example.com" target="_blank">Student@example.com</a>] by Zestboard App as part of your Account. 
+	<p style="padding-top:10px; color: #000000; font-size: 13px; text-align: center; margin: 0 auto;">This message was mailed to [<a style="color: #007bff;" href="mailto:`+email+`" target="_blank">`+email+`</a>] by Zestboard App as part of your Account. 
 	
 	<br> <br>
-	{123-XYZ block area city zipcode} | <a style="color: #007bff;" href="mailto:contact@zestboard.com" target="_blank">contact@zestboard.com</a> | <a href="tel:123-456-7890" target="_blank" style="color: #007bff;">123-456-7890</a>
+	{123-XYZ block area city zipcode} | <a style="color: #007bff;" href="mailto:support@zestboard.com" target="_blank">support@zestboard.com</a> | <a href="tel:123-456-7890" target="_blank" style="color: #007bff;">123-456-7890</a>
 	</p>
 	</div>
 	</div>
@@ -144,7 +144,7 @@ exports.forgot_password_mail = function(username, email, temp_password, callback
 	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;">
 	Your account security is important to us. If any of the above information is inaccurate, please contact us using the information below.
 	</p>
-	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"> In case you face any issues with registration or logging in, please contact us at our {Email}. Our customer support team will be happy to help you with your queries.
+	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"> In case you face any issues with registration or logging in, please contact us at our support@zestboard.com. Our customer support team will be happy to help you with your queries.
 	</p>
 	<br>
 	<p style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; color: black ;">Regards,</p>
@@ -152,10 +152,10 @@ exports.forgot_password_mail = function(username, email, temp_password, callback
 	</div>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: -webkit-box; flex-wrap: wrap; text-align: center; width: 85%; margin: 0px auto; color: rgb(121, 121, 121); font-size: 12px; padding-top: 15px;">
 	
-	<p style="padding-top:10px; color: #000000; font-size: 13px; text-align: center; margin: 0 auto;">This message was mailed to [<a style="color: #007bff;" href="mailto:student@example.com" target="_blank">Student@example.com</a>] by Zestboard App as part of your Account. 
+	<p style="padding-top:10px; color: #000000; font-size: 13px; text-align: center; margin: 0 auto;">This message was mailed to [<a style="color: #007bff;" href="mailto:`+email+`" target="_blank">`+email+`</a>] by Zestboard App as part of your Account. 
 	
 	<br> <br>
-	{123-XYZ block area city zipcode} | <a style="color: #007bff;" href="mailto:contact@zestboard.com" target="_blank">contact@zestboard.com</a> | <a href="tel:123-456-7890" target="_blank" style="color: #007bff;">123-456-7890</a>
+	{123-XYZ block area city zipcode} | <a style="color: #007bff;" href="mailto:support@zestboard.com" target="_blank">support@zestboard.com</a> | <a href="tel:123-456-7890" target="_blank" style="color: #007bff;">123-456-7890</a>
 	</p>
 	</div>
 	</div>
@@ -204,10 +204,10 @@ exports.password_changed = function(username, email, callback) {
 	<hr>
 	<br>
 	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;">
-	Your account security is important to us. If any of the above information is inaccurate, please contact us at [e-mail]. 
+	Your account security is important to us. If any of the above information is inaccurate, please contact us at support@zestboard.com. 
 	</p>
 	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;">
-	In case you face any issues with registration or logging in. please contact as at [e-mail] and our customer support team will be happy to help you with your queries. 
+	In case you face any issues with registration or logging in. please contact as at support@zestboard.com and our customer support team will be happy to help you with your queries. 
 	</p>
 	<br>
 	<p style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; color: black ;">Regards,</p>
@@ -215,10 +215,10 @@ exports.password_changed = function(username, email, callback) {
 	</div>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: -webkit-box; flex-wrap: wrap; text-align: center; width: 85%; margin: 0px auto; color: rgb(121, 121, 121); font-size: 12px; padding-top: 15px;">
 	
-	<p style="padding-top:10px; color: #000000; font-size: 13px; text-align: center; margin: 0 auto;">This message was mailed to [<a style="color: #007bff;" href="mailto:student@example.com" target="_blank">Student@example.com</a>] by Zestboard App as part of your Account. 
+	<p style="padding-top:10px; color: #000000; font-size: 13px; text-align: center; margin: 0 auto;">This message was mailed to [<a style="color: #007bff;" href="mailto:`+email+`" target="_blank">`+email+`</a>] by Zestboard App as part of your Account. 
 	
 	<br> <br>
-	{123-XYZ block area city zipcode} | <a style="color: #007bff;" href="mailto:contact@zestboard.com" target="_blank">contact@zestboard.com</a> | <a href="tel:123-456-7890" target="_blank" style="color: #007bff;">123-456-7890</a>
+	{123-XYZ block area city zipcode} | <a style="color: #007bff;" href="mailto:support@zestboard.com" target="_blank">support@zestboard.com</a> | <a href="tel:123-456-7890" target="_blank" style="color: #007bff;">123-456-7890</a>
 	</p>
 	</div>
 	</div>
