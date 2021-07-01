@@ -160,14 +160,14 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			} else if(type == "location") {
-				db.query("SELECT country_id, country, state_id, state, city, street_address, zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT country_id, country, state_id, state, city_id, city, street_address, zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
 				});
 				
 			}  else if(type == "phone") {
-				db.query("SELECT country_calling_code, phone_number FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT country_calling_code, country_calling_id, phone_number FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -205,7 +205,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				});
 				
 			} else if(type == "user-account") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
 					// console.log("user_account_query " , user_account_query);
 				db.query(user_account_query, function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
@@ -220,7 +220,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				});
 				
 			}  else if(type == "location-preference") {
-				db.query("SELECT location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+				db.query("SELECT location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 
 					return res.status(200).send({ status: 200, data: result });
@@ -232,7 +232,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			}  else if(type == "review") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city, street_address, zipcode, country_calling_code, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed FROM user_account WHERE user_account_id = '"+user_id+"'";
 				var student_category_query = "SELECT sc.*, cat.profile_name as profile_name,  industry_name FROM student_category as sc  LEFT JOIN  job_profiles  as cat ON sc.category_id = cat.id LEFT JOIN industry as subcat ON sc.subcategory_id = subcat.id  WHERE student_id = '"+user_id+"'"
 				var student_expertise_query = "SELECT * FROM student_expertise WHERE student_id = '"+user_id+"'";
 				var student_education_query = "SELECT * FROM student_education WHERE student_id = '"+user_id+"'";
@@ -614,7 +614,26 @@ module.exports.get_states = function (req, res, next) {
 			});
 			
 		} else {
-			return res.status(200).send({ code: 600, msg: 'No Category ID Passed' });
+			return res.status(200).send({ code: 600, msg: 'No Country ID Passed' });
+			
+		}
+	} else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.get_cities = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var state_id = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
+		if(state_id!= ""){
+			db.query("SELECT id, name  FROM cities WHERE state_id = '"+state_id+"'", function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+
+				return res.status(200).send({ status: 200, data: result });
+			});
+			
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No State ID Passed' });
 			
 		}
 	} else {
@@ -623,7 +642,7 @@ module.exports.get_states = function (req, res, next) {
 }
 
 module.exports.get_calling_code = function (req, res, next) {
-	db.query('SELECT call_prefix, CONCAT("(+", call_prefix, ")", " ", country_name) AS calling_code from countries', function (err, result, fields) {
+	db.query('SELECT call_prefix as id, CONCAT("(+", call_prefix, ")", " ", country_name) AS calling_code from countries WHERE call_prefix != "" ORDER BY country_name ASC', function (err, result, fields) {
 		if (err) return res.status(200).send({ status: 500, data: err });
 
 		return res.status(200).send({ status: 200, data: result });
@@ -642,6 +661,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 		var state_id         = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
 		var state            = (req.body.state != undefined && req.body.state != null) ? req.body.state : "";
 		var location         = (req.body.location != undefined && req.body.location != null) ? req.body.location : "";
+		var location_id         = (req.body.location_id != undefined && req.body.location_id != null) ? req.body.location_id : "";
 		var zipcode          = (req.body.zipcode != undefined && req.body.zipcode != null) ? req.body.zipcode : "";
 		
 		var from_month       = (req.body.from_month != undefined && req.body.from_month != null) ? req.body.from_month : "";
@@ -650,6 +670,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 		var to_year          = (req.body.to_year != undefined && req.body.to_year != null) ? req.body.to_year : "";
 		var job_description  = (req.body.job_description != undefined && req.body.job_description != null) ? req.body.job_description : "";
 		var experience_id    = (req.body.experience_id != undefined && req.body.experience_id != null) ? req.body.experience_id : "";
+		var currently    = (req.body.currently != undefined && req.body.currently != null) ? req.body.currently : "";
 		var user_id          = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
 		if (experience_id == -1) {
@@ -662,6 +683,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 				"state_id" : state_id,
 				"state" : state,
 				"location" : location,
+				"location_id" : location_id,
 				"zipcode" : zipcode,
 				
 				"from_month" : from_month,
@@ -669,6 +691,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 				"to_year" : to_year,
 				"to_month" : to_month,
 				"to_year" : to_year,
+				"currently" : currently,
 				"job_description" : job_description,
 				"student_id" : user_id
 			}
@@ -685,6 +708,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 							"company_name": company_name,
 							"job_title": job_title,
 							"location": location,
+							"location_id": location_id,
 							"country": country,
 							"from_month": from_month,
 							"from_year": from_year,
@@ -700,7 +724,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 				}
 			});
 		} else {
-			var sqlQuery = 'UPDATE student_experience SET company_name = "'+ company_name +'", job_title = "'+ job_title +'", location = "'+ location +'", country_id = "'+ country_id +'", country = "'+ country +'", state_id = "'+ state_id +'", state = "'+ state +'", zipcode = "'+ zipcode +'", from_month = "'+ from_month +'", from_year = "'+ from_year +'", to_month = "'+ to_month +'", to_year = "'+ to_year +'", job_description = "'+ job_description +'" WHERE student_id = "'+user_id+'" AND student_experience_id = "'+experience_id+'" ';
+			var sqlQuery = 'UPDATE student_experience SET company_name = "'+ company_name +'", job_title = "'+ job_title +'", location = "'+ location +'", location_id = "'+ location_id +'", country_id = "'+ country_id +'", country = "'+ country +'", state_id = "'+ state_id +'", state = "'+ state +'", zipcode = "'+ zipcode +'", from_month = "'+ from_month +'", from_year = "'+ from_year +'", to_month = "'+ to_month +'", to_year = "'+ to_year +'", currently = "'+ currently +'", job_description = "'+ job_description +'" WHERE student_id = "'+user_id+'" AND student_experience_id = "'+experience_id+'" ';
 			db.query(sqlQuery, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 				
@@ -711,6 +735,7 @@ module.exports.add_update_profile_employment = function (req, res, next) {
 						"company_name": company_name,
 						"job_title": job_title,
 						"location": location,
+						"location_id": location_id,
 						"country": country,
 						"from_month": from_month,
 						"from_year": from_year,
@@ -880,12 +905,13 @@ module.exports.add_update_profile_location = function (req, res, next) {
 		var country = (req.body.country != undefined && req.body.country != null) ? req.body.country : "";
 		var state_id = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
 		var state = (req.body.state != undefined && req.body.state != null) ? req.body.state : "";
+		var city_id    = (req.body.city_id != undefined && req.body.city_id != null) ? req.body.city_id : "";
 		var city    = (req.body.city != undefined && req.body.city != null) ? req.body.city : "";
 		var street_address = (req.body.street_address != undefined && req.body.street_address != null) ? req.body.street_address : "";
 		var zipcode = (req.body.zipcode != undefined && req.body.zipcode != null) ? req.body.zipcode : "";
 		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
-		var updateUser = 'UPDATE user_account SET profile_completed = "10", country = "'+ country +'", country_id = "'+ country_id +'",  state_id = "'+ state_id +'", state = "'+ state +'", city = "'+ city +'", street_address = "'+ street_address +'", zipcode = "'+ zipcode +'" WHERE user_account_id = "'+user_id+'"';
+		var updateUser = 'UPDATE user_account SET profile_completed = "10", country = "'+ country +'", country_id = "'+ country_id +'",  state_id = "'+ state_id +'", state = "'+ state +'", city_id = "'+ city_id +'", city = "'+ city +'", street_address = "'+ street_address +'", zipcode = "'+ zipcode +'" WHERE user_account_id = "'+user_id+'"';
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
@@ -906,15 +932,17 @@ module.exports.add_update_profile_location = function (req, res, next) {
 module.exports.add_update_profile_phone = function (req, res, next) {
 	if (Object.keys(req.body).length > 0) {
 		var country_calling_code = (req.body.country_calling_code != undefined && req.body.country_calling_code != null) ? req.body.country_calling_code : "";
+		var country_calling_id = (req.body.country_calling_id != undefined && req.body.country_calling_id != null) ? req.body.country_calling_id : "";
 		var phone_number    = (req.body.phone_number != undefined && req.body.phone_number != null) ? req.body.phone_number : "";
 		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
-		var updateUser = 'UPDATE user_account SET profile_completed = "11", country_calling_code = "'+ country_calling_code +'", phone_number = "'+ phone_number +'" WHERE user_account_id = "'+user_id+'"';
+		var updateUser = 'UPDATE user_account SET profile_completed = "11", country_calling_code = "'+ country_calling_code +'", country_calling_id = "'+ country_calling_id +'", phone_number = "'+ phone_number +'" WHERE user_account_id = "'+user_id+'"';
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });
 			
 			let resultset = { 
 				'country_calling_code' : country_calling_code,
+				'country_calling_id' : country_calling_id,
 				'phone_number' : phone_number,
 			}
 			
@@ -1229,6 +1257,9 @@ module.exports.update_profile_job_location_preference = function (req, res, next
 	if (Object.keys(req.body).length > 0) {
 		var location_preference = (req.body.location_preference != undefined && req.body.location_preference != null) ? req.body.location_preference : "";
 		var location_preference_name = (req.body.location_preference_name != undefined && req.body.location_preference_name != null) ? req.body.location_preference_name : "";
+		
+		var location_preference_id = (req.body.location_preference_id != undefined && req.body.location_preference_id != null) ? req.body.location_preference_id : "";
+		
 		var prefered_country_id = (req.body.prefered_country_id != undefined && req.body.prefered_country_id != null) ? req.body.prefered_country_id : "";
 		var prefered_country = (req.body.prefered_country != undefined && req.body.prefered_country != null) ? req.body.prefered_country : "";
 		var prefered_state_id = (req.body.prefered_state_id != undefined && req.body.prefered_state_id != null) ? req.body.prefered_state_id : "";
@@ -1238,7 +1269,7 @@ module.exports.update_profile_job_location_preference = function (req, res, next
 		
 		var user_id  = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
 		
-		var updateUser = 'UPDATE user_account SET profile_completed = "6", location_preference = "'+ location_preference +'", location_preference_name = "'+ location_preference_name +'", prefered_country_id = "'+ prefered_country_id +'", prefered_country = "'+ prefered_country +'", prefered_state_id = "'+ prefered_state_id +'", prefered_state = "'+ prefered_state +'"  WHERE user_account_id = "'+user_id+'"'; 
+		var updateUser = 'UPDATE user_account SET profile_completed = "6", location_preference = "'+ location_preference +'", location_preference_id = "'+ location_preference_id +'", location_preference_name = "'+ location_preference_name +'", prefered_country_id = "'+ prefered_country_id +'", prefered_country = "'+ prefered_country +'", prefered_state_id = "'+ prefered_state_id +'", prefered_state = "'+ prefered_state +'"  WHERE user_account_id = "'+user_id+'"'; 
 		/*, prefered_street_address = "'+ prefered_street_address +'", prefered_zipcode = "'+ prefered_zipcode +'"*/
 		db.query(updateUser, function (error, result, fields) {
 			if (error) return res.status(500).send({ status: 600, msg: error.message });

@@ -137,6 +137,10 @@ router.post('/user/get_states', userModel.get_states, function (req, res, callba
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/user/get_cities', userModel.get_cities, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
 router.post('/user/get_calling_code', userModel.get_calling_code, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
