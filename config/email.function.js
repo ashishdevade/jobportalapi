@@ -58,34 +58,19 @@ exports.send_registration_mail = function (username, email, temp_password, callb
 	</div>
 	<hr>
 	<div style="">
-	<h4 style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"><b>Hello `+username+`, </b> <br> <br> Welcome to Zestboard family! Thank you for signing up with us. <br><br> Please use this Email address and Password mentioned below to login into your account - </h4>
+	<h4 style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"><b>Hello `+username+`, </b> <br> <br> Welcome to Zestboard family! Thank you for signing up with us. <br><br> Please click the link below to create a new password and login into your account.</h4>
 	</div>
 	
-	<table style="text-align: left; width: 100%; margin-left: 0%;">
-	<tbody style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 14px ; ">
-	<tr>
-	<th style="color: #000000; width:30%; height: 30px;"><b>Name</b></th>
-	<td> `+username+` </td>
-	</tr>
-	<tr>
-	<th style="color: #000000; width:30%; height: 30px;">Email </th>
-	<td> `+ email +` </td>
-	</tr>
-	<tr>
-	<th style="color: #000000; width:30%; height: 30px;">Temp Password</th>
-	<td>`+ temp_password +`<br></td>
-	</tr>
-	</tbody>
-	</table>
+	
 	<br>
 	<div style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; display: flex; flex-wrap: wrap; text-align: center; margin: 0px auto;">
-	<a href="http://zestboard.com/app/#/auth/login" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
-	cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: transparent; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; text-decoration: none;     color: #fff !important; background-color: #007bff; border-color: #007bff;	font-weight: 700;">Go to zestboard &#8594;</a>
+	<a href="http://zestboard.com/app/#/auth/change-otp/`+temp_password+`" target="_blank" style="text-align: center; margin: 0 auto ;  display: inline-block; font-weight: 400; color: #212529; text-align: center; vertical-align: middle;
+	cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: transparent; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; text-decoration: none;     color: #fff !important; background-color: #007bff; border-color: #007bff;	font-weight: 700;">Create Password &#8594;</a>
 	
 	</div>
 	<hr>
 	<br>
-	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"> In case you face any issues with registration or logging in, please contact us at our support@zestboard.com. Our customer support team will be happy to help you with your queries.
+	<p style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;color: #48486a;text-align: left;font-size: 16px; font-weight: 500;"> Your account security is important to us. If any of the above information is inaccurate or you face any issues with registration or logging in, please contact us at support@zestboard.com and our customer support team will be happy to help you with your queries
 	</p>
 	<br>
 	<p style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; color: black ;"><b>Thanks & Regards,</b></p>
