@@ -9,6 +9,7 @@ var constants = require('../config/constants');
 
 // Models - start 
 var userModel = require('../models/user.model');
+var adminModel = require('../models/admin.model');
 var testModel = require('../models/test.model');
 // Models - end
 const bodyParser = require('body-parser');
@@ -280,6 +281,12 @@ router.post('/test/send_test_mail_with_body', testModel.send_test_mail_with_body
 });
 
 router.post('/test/remove_user_with_data', testModel.remove_user_with_data, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+// admin model 
+
+router.post('/admin/admin_validate_login', adminModel.admin_validate_login, function (req, res, callback) {
   // res.json({ status : res.status, message: res.message });
 });
 
