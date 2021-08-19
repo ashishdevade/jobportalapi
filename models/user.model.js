@@ -68,8 +68,8 @@ module.exports.register_user = function (req, res, next) {
 		db.query("SELECT * FROM user_account WHERE email_id = '" + email + "'", function (err, result, fields) {
 			if (err) return res.status(200).send({ status: 500, data: err });
 			if (result.length == 0) {
-				var sqlQuery = 'INSERT INTO user_account SET account_type = ? , first_name = ? , last_name = ? , email_id = ? , password = ?, user_name = ?, company_name = ?, industry = ?, other_industry = ?, is_registered_complete = ? ';
-				var data = [account_type, firstname, lastname, email, md5(password), firstname, company_name, industry, other_industry, 0];
+				var sqlQuery = 'INSERT INTO user_account SET account_type = ? , first_name = ? , last_name = ? , email_id = ? , password = ?, user_name = ?, company_name = ?, industry = ?, other_industry = ?, is_registered_complete = ?, status = ? ';
+				var data = [account_type, firstname, lastname, email, md5(password), firstname, company_name, industry, other_industry, 0, 1];
 				db.query(sqlQuery, data, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					if (result.insertId > 0) {
@@ -207,7 +207,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 				});
 				
 			} else if(type == "user-account") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry, status FROM user_account WHERE user_account_id = '"+user_id+"'";
 					// console.log("user_account_query " , user_account_query);
 				db.query(user_account_query, function (err, result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
@@ -234,7 +234,7 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					return res.status(200).send({ status: 200, data: result });
 				});
 			}  else if(type == "review") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry FROM user_account WHERE user_account_id = '"+user_id+"'";
+				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry, status FROM user_account WHERE user_account_id = '"+user_id+"'";
 				var student_category_query = "SELECT sc.*, cat.profile_name as profile_name,  industry_name FROM student_category as sc  LEFT JOIN  job_profiles  as cat ON sc.category_id = cat.id LEFT JOIN industry as subcat ON sc.subcategory_id = subcat.id  WHERE student_id = '"+user_id+"'"
 				var student_expertise_query = "SELECT * FROM student_expertise WHERE student_id = '"+user_id+"'";
 				var student_education_query = "SELECT * FROM student_education WHERE student_id = '"+user_id+"'";
@@ -1366,8 +1366,7 @@ module.exports.change_password = function (req, res, next) {
 		
 		db.query(user_select_query, function (err, resultset, fields) {
 			if (err) return res.status(200).send({ status: 500, data: err });
-			console.log("otp ", resultset[0]['password'])
-			console.log("new pass  ", md5(old_pass))
+		
 			if(resultset[0]['password'] == md5(old_pass)){
 				var updateUser = 'UPDATE user_account SET is_registered_complete = "1", password = MD5("' + new_pass + '") WHERE user_account_id = "'+ user_id +'"';
 				db.query(updateUser, function (error, result, fields) {

@@ -5,22 +5,7 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP DATABASE IF EXISTS `job_portal`;
-CREATE DATABASE `job_portal` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `job_portal`;
-
-DROP TABLE IF EXISTS `authorise`;
-CREATE TABLE `authorise` (
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `authorise`;
-INSERT INTO `authorise` (`username`, `email`, `name`, `password`) VALUES
-('swati',	'mahajan.swati90@gmail.com',	'Administrator',	'swati');
 
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
@@ -47996,37 +47981,6 @@ INSERT INTO `cities` (`id`, `name`, `state_id`) VALUES
 (48355,	'Yumbo',	805),
 (48356,	'Zarzal',	805);
 
-DROP TABLE IF EXISTS `company`;
-CREATE TABLE `company` (
-  `company_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `address` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `company_name` varchar(255) DEFAULT NULL,
-  `contact` varchar(255) DEFAULT NULL,
-  `contact1` varchar(255) DEFAULT NULL,
-  `contact2` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `email_id` varchar(255) DEFAULT NULL,
-  `state` varchar(255) DEFAULT NULL,
-  `user_account_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `company`;
-
-DROP TABLE IF EXISTS `company_interest`;
-CREATE TABLE `company_interest` (
-  `company_interest_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `company_id` bigint(20) NOT NULL,
-  `hiring_manager_id` varchar(255) DEFAULT NULL,
-  `job_id` bigint(20) NOT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `student_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`company_interest_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `company_interest`;
-
 DROP TABLE IF EXISTS `countries`;
 CREATE TABLE `countries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -48285,35 +48239,6 @@ INSERT INTO `countries` (`id`, `iso_code`, `country_name`, `call_prefix`) VALUES
 (245,	'ZM',	'Zambia',	260),
 (246,	'ZW',	'Zimbabwe',	263);
 
-DROP TABLE IF EXISTS `education`;
-CREATE TABLE `education` (
-  `education_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `education_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`education_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `education`;
-
-DROP TABLE IF EXISTS `hiring_manager`;
-CREATE TABLE `hiring_manager` (
-  `hiring_manager_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `city` varchar(255) DEFAULT NULL,
-  `company_id` bigint(20) NOT NULL,
-  `contact1` varchar(255) DEFAULT NULL,
-  `contact2` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `first_name` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `middle_name` varchar(255) DEFAULT NULL,
-  `registration_date` varchar(255) DEFAULT NULL,
-  `state` varchar(255) DEFAULT NULL,
-  `user_account_id` bigint(20) NOT NULL,
-  `email_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`hiring_manager_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `hiring_manager`;
-
 DROP TABLE IF EXISTS `industry`;
 CREATE TABLE `industry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -48386,26 +48311,6 @@ INSERT INTO `industry` (`id`, `industry_name`, `access_type`) VALUES
 (60,	'Sports',	'Student'),
 (61,	'Telecommunication',	'Student'),
 (62,	'Transportation',	'Student');
-
-DROP TABLE IF EXISTS `job`;
-CREATE TABLE `job` (
-  `job_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `category_id` bigint(20) NOT NULL,
-  `company_id` bigint(20) NOT NULL,
-  `experience_req` varchar(255) DEFAULT NULL,
-  `job_city` varchar(255) DEFAULT NULL,
-  `job_description` varchar(255) DEFAULT NULL,
-  `job_max_salary` varchar(255) DEFAULT NULL,
-  `job_min_salary` varchar(255) DEFAULT NULL,
-  `job_posted_date` varchar(255) DEFAULT NULL,
-  `job_state` varchar(255) DEFAULT NULL,
-  `job_status` varchar(255) DEFAULT NULL,
-  `job_title` varchar(255) DEFAULT NULL,
-  `jobtype_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `job`;
 
 DROP TABLE IF EXISTS `job_profiles`;
 CREATE TABLE `job_profiles` (
@@ -53096,8 +53001,9 @@ CREATE TABLE `student_category` (
 
 TRUNCATE `student_category`;
 INSERT INTO `student_category` (`student_category_id`, `category_id`, `subcategory_id`, `industry_description`, `team_department`, `student_id`) VALUES
-(2,	3,	75,	'',	'Software development Department',	12),
-(3,	1,	44,	'asdasdasda',	NULL,	1);
+(2,	1,	56,	'Why Construction Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)',	'',	17),
+(3,	1,	56,	'Why Construction Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)',	'',	17),
+(4,	1,	56,	'Why Construction Industry? (You can keep it short or take it as a chance to express your passion/interest towards specific industry)',	'',	17);
 
 DROP TABLE IF EXISTS `student_certificate`;
 CREATE TABLE `student_certificate` (
@@ -53116,8 +53022,8 @@ CREATE TABLE `student_certificate` (
 
 TRUNCATE `student_certificate`;
 INSERT INTO `student_certificate` (`student_certificate_id`, `student_id`, `type`, `certificate_name`, `description`, `provider`, `certificate_link`, `date_earned`, `date_ended`, `uploaded_document`) VALUES
-(5,	1,	'license',	'Highcharts Demo updated',	'Highcharts Demo updated',	'Highcharts Demo',	'http://www.google.com/test',	'2021-04-07T18:30:00.000Z',	'2021-04-16T18:30:00.000Z',	'uploads/license_document/license_document-1620300688844.pdf'),
-(6,	1,	'license',	'Test Project',	'Test',	'Highcharts Demo',	'http://www.google.com/test',	'2021-04-07T18:30:00.000Z',	'',	'');
+(5,	1,	'license',	'Highcharts Demo 2',	'Highcharts Demo ',	'Highcharts Demo',	'http://www.google.com/test',	'2021-04-07T18:30:00.000Z',	'2021-04-16T18:30:00.000Z',	'uploads/license_document/license_document-1620300688844.pdf'),
+(6,	1,	'license',	'Test Project 2 updated',	'Test',	'Highcharts Demo',	'http://www.google.com/test',	'2021-04-07T18:30:00.000Z',	'2021-04-07T18:30:00.000Z',	'');
 
 DROP TABLE IF EXISTS `student_education`;
 CREATE TABLE `student_education` (
@@ -53177,8 +53083,8 @@ CREATE TABLE `student_expertise` (
 
 TRUNCATE `student_expertise`;
 INSERT INTO `student_expertise` (`id`, `skills`, `others`, `level`, `student_id`) VALUES
-(2,	'[{\"id\":4,\"name\":\"Python\"},{\"id\":15,\"name\":\"SAP Analytics Cloud\"},{\"id\":29,\"name\":\"Oracle Data Integrator \"},{\"id\":58,\"name\":\"Amazon Neptune \"},{\"id\":60,\"name\":\"Azure Cosmos DB \"},{\"id\":63,\"name\":\"IBM DB2 \"},{\"id\":66,\"name\":\"Neo4j \"}]',	'Software development, system administrator, application design updated',	3,	1),
-(3,	'\"\"',	'',	1,	12),
+(2,	'[{\"id\":4,\"name\":\"Python\"},{\"id\":15,\"name\":\"SAP Analytics Cloud\"},{\"id\":29,\"name\":\"Oracle Data Integrator \"},{\"id\":58,\"name\":\"Amazon Neptune \"},{\"id\":60,\"name\":\"Azure Cosmos DB \"},{\"id\":63,\"name\":\"IBM DB2 \"},{\"id\":66,\"name\":\"Neo4j \"}]',	'Software development, system administrator, application design updated',	2,	1),
+(3,	'\"\"',	'',	2,	12),
 (4,	NULL,	NULL,	1,	17);
 
 DROP TABLE IF EXISTS `student_languages`;
@@ -53214,37 +53120,6 @@ INSERT INTO `student_project` (`student_project_id`, `student_id`, `title`, `des
 (1,	1,	'Test Project 2 updated',	'test test test test test test test test ',	NULL,	'http://www.google.com/test',	'2019-10-31T18:30:00.000Z',	'2020-08-26T18:30:00.000Z'),
 (3,	1,	'Highcharts Demo',	'Highcharts Demo',	NULL,	'http://www.amazon.com/test',	'2019-10-31T18:30:00.000Z',	'2020-08-26T18:30:00.000Z'),
 (4,	1,	'Highcharts Demo updated',	'Highcharts Demo',	NULL,	'http://www.google.com/test',	'1970-01-01T00:00:00.000Z',	'1970-01-01T00:00:00.000Z');
-
-DROP TABLE IF EXISTS `student_record`;
-CREATE TABLE `student_record` (
-  `student_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `category_id` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `contact1` varchar(255) DEFAULT NULL,
-  `contact2` varchar(255) DEFAULT NULL,
-  `correspondence_address` varchar(255) DEFAULT NULL,
-  `dob` varchar(255) DEFAULT NULL,
-  `email_id` varchar(255) DEFAULT NULL,
-  `first_name` varchar(255) DEFAULT NULL,
-  `gender` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `linked_in_profile` varchar(255) DEFAULT NULL,
-  `middle_name` varchar(255) DEFAULT NULL,
-  `mobile_number` varchar(255) DEFAULT NULL,
-  `nationality` varchar(255) DEFAULT NULL,
-  `photo` varchar(255) DEFAULT NULL,
-  `residential_address` varchar(255) DEFAULT NULL,
-  `resume_link` varchar(255) DEFAULT NULL,
-  `skill_set` varchar(255) DEFAULT NULL,
-  `state` varchar(255) DEFAULT NULL,
-  `user_account_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`student_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-TRUNCATE `student_record`;
-INSERT INTO `student_record` (`student_id`, `category_id`, `city`, `contact1`, `contact2`, `correspondence_address`, `dob`, `email_id`, `first_name`, `gender`, `last_name`, `linked_in_profile`, `middle_name`, `mobile_number`, `nationality`, `photo`, `residential_address`, `resume_link`, `skill_set`, `state`, `user_account_id`) VALUES
-(1,	NULL,	'LB',	'1234567890',	'2345678909',	'gsdytft',	'2021-03-16',	'nisarg205@gmail.com',	'Nisarg',	'Male',	'Pandya',	'jfuyu',	'P',	NULL,	'jyg',	NULL,	'fj',	'jfj',	NULL,	'California',	0),
-(2,	NULL,	'Long Beach',	'2134567890',	'1234567890',	'hgujhgikhkj',	'2021-03-08',	'nisarg205@gmail.com',	'Nisarg',	'Male',	'Pandya',	'jgujj',	'P',	NULL,	'INdain',	NULL,	'fj',	'hgj',	NULL,	'California',	2);
 
 DROP TABLE IF EXISTS `subcategories`;
 CREATE TABLE `subcategories` (
@@ -53342,11 +53217,13 @@ INSERT INTO `subcategories` (`id`, `category_id`, `subcategory_name`) VALUES
 DROP TABLE IF EXISTS `user_account`;
 CREATE TABLE `user_account` (
   `user_account_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_type` varchar(255) DEFAULT NULL,
+  `account_type` varchar(255) DEFAULT NULL COMMENT 'Student | Company | Admin',
   `email_id` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0' COMMENT '1 - action | 0 - inactive',
+  `is_deleted` tinyint(4) DEFAULT '0',
   `user_name` varchar(255) DEFAULT NULL,
   `profile_completed` int(11) DEFAULT '0',
   `is_registered_complete` int(11) DEFAULT '0',
@@ -53388,10 +53265,13 @@ CREATE TABLE `user_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `user_account`;
-INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `user_name`, `profile_completed`, `is_registered_complete`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `industry`, `other_industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `city_id`, `street_address`, `zipcode`, `country_calling_code`, `country_calling_id`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `location_preference_id`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	'Nisarg1',	14,	1,	'50',	'3500',	'-4.00',	'16',	NULL,	NULL,	NULL,	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'101',	'Madhya Pradesh',	'21',	'Indore',	'2229',	'194 B Clerk Colony Indore M.P',	'452011',	'(+44) United Kingdom',	44,	'9996547821',	'1',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	NULL,	NULL,	NULL,	NULL),
-(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	'James',	16,	1,	'',	'',	'0.00',	'0.00',	'MI 6 secret Service',	NULL,	NULL,	'Data Analytics',	'<p>HOW YOU\'LL HELP US KEEP CLIMBING (OVERVIEW &amp; KEY RESPONSIBILITIES)<br>The Operational Analytics &nbsp;team provides strategic insight through first understanding business processes and second leveraging data and analytics to drive continuous improvement efforts. The Analytics Specialist will be asked to work closely with leaders to develop creative solutions to current business challenges. We are looking for data curious individuals that seek to understand process and can connect with our business partners to leverage data and drive improvement.</p><blockquote><p>Data has transformed the way Delta operates. The Operational Analytics team is the core of the data strategy, focused on designing the future data environment. The team’s mission is to democratize data building and maintain a data structure that facilitates analysis efforts, KPI creation, Monthly Performance Reporting (MPR), report automation, and front-line analysis tools. You’ll be empowered to constantly innovate data architecture to enable more complex analytic techniques like machine learning. For example, you may be asked to create executive reporting and interactive dashboard tools that monitor Delta’s fuel cost, taking the project from source data curation to delivering recommendations to front-line leaders. The Analytics Specialist will</p></blockquote><p>Locate and extract data from a variety of sources for use in analysis, models and reporting<br>Aggregate views of data sources into meaningful hierarchies<br>Develop automated reports and analyses with direction from other senior members on the team<br>Support process improvement and project management engagements for both individual business units and cross-divisional initiatives<br>Present findings to Operational Analytics leaders<br>Practice safety-conscious behaviors in all operational processes and procedures<br>Have a team first attitude with the success of our team and business partners as their top priority<br>Be intellectually curious, ask questions and speak up when they have an idea<br>Be \"Do-ers\" and are not afraid of failure, but instead learn from each experience and improve<br>Be independent workers who look for problems to solve and then come up with innovative ideas<br>Make things happen without frequent management direction and know when to communicate status or escalate issues to their manager, teammates or stakeholders.<br>Enjoy working in a high-profile environment with fluid priorities, ambiguity and extremely aggressive deadlines.</p><blockquote><p>WHAT YOU NEED TO SUCCEED (MINIMUM QUALIFICATIONS)<br>Embraces diverse people, thinking and styles<br>Consistently makes safety and security, of self and others, the priority<br>High School diploma, GED or High School Equivalency<br>Where permitted by applicable law, must have received or be willing to receive the COVID-19 vaccine by date of hire to be considered for U.S.-based job, if not currently employed by Delta Air Lines, Inc.<br>3 years work experience in analysis, information science, data visualization, or other relevant quantitative field preferred.<br>Previous experience identifying, cleaning, and structuring new data sources preferred<br>Must be comfortable working in group and individual settings.<br>Successful candidates will have experience with some or all of the following: SQL, SAS, R, Tableau or other database interface tools and languages like Visual Basic, Perl, Python, UNIX or other basic functional programming tools</p></blockquote>',	'uploads/job_description/uploaded_jd-1624642287782.pdf',	'Central African Republic',	'41',	'Haute-Kotto',	'690',	'Ouadda',	'10883',	'194-B Clerk Colony Indore M.P',	'452001',	'',	0,	'',	'5',	NULL,	2,	231,	'United States',	3975,	'Washington',	'Edmonds',	'46802',	'194-B Clerk Colony Indore M.P',	'452001',	2,	'5 - 8'),
-(16,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'7b082840919e91584d6ea2079abaed59',	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(17,	'Company',	'j.meenesh@mailinator.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	'Meenesh',	7,	1,	'',	'',	'',	'',	'Home',	'-1',	'Call Center Support',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'1',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `status`, `is_deleted`, `user_name`, `profile_completed`, `is_registered_complete`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `industry`, `other_industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `city_id`, `street_address`, `zipcode`, `country_calling_code`, `country_calling_id`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `location_preference_id`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	1,	0,	'Nisarg1',	1,	1,	'50',	'3500',	'-4.00',	'16',	'',	'',	'',	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'101',	'Madhya Pradesh',	'21',	'Indore',	'2229',	'194 B Clerk Colony Indore M.P',	'452011',	'(+44) United Kingdom',	44,	'9996547821',	'1',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	NULL,	NULL,	NULL,	NULL),
+(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'ceb6c970658f31504a901b89dcd3e461',	1,	0,	'James',	1,	1,	'',	'',	'0.00',	'0.00',	'MI 6 secret Service',	'9',	'',	'Data Analytics',	'<p>HOW YOU\'LL HELP US KEEP CLIMBING (OVERVIEW &amp; KEY RESPONSIBILITIES)<br>The Operational Analytics &nbsp;team provides strategic insight through first understanding business processes and second leveraging data and analytics to drive continuous improvement efforts. The Analytics Specialist will be asked to work closely with leaders to develop creative solutions to current business challenges. We are looking for data curious individuals that seek to understand process and can connect with our business partners to leverage data and drive improvement.</p><blockquote><p>Data has transformed the way Delta operates. The Operational Analytics team is the core of the data strategy, focused on designing the future data environment. The team’s mission is to democratize data building and maintain a data structure that facilitates analysis efforts, KPI creation, Monthly Performance Reporting (MPR), report automation, and front-line analysis tools. You’ll be empowered to constantly innovate data architecture to enable more complex analytic techniques like machine learning. For example, you may be asked to create executive reporting and interactive dashboard tools that monitor Delta’s fuel cost, taking the project from source data curation to delivering recommendations to front-line leaders. The Analytics Specialist will</p></blockquote><p>Locate and extract data from a variety of sources for use in analysis, models and reporting<br>Aggregate views of data sources into meaningful hierarchies<br>Develop automated reports and analyses with direction from other senior members on the team<br>Support process improvement and project management engagements for both individual business units and cross-divisional initiatives<br>Present findings to Operational Analytics leaders<br>Practice safety-conscious behaviors in all operational processes and procedures<br>Have a team first attitude with the success of our team and business partners as their top priority<br>Be intellectually curious, ask questions and speak up when they have an idea<br>Be \"Do-ers\" and are not afraid of failure, but instead learn from each experience and improve<br>Be independent workers who look for problems to solve and then come up with innovative ideas<br>Make things happen without frequent management direction and know when to communicate status or escalate issues to their manager, teammates or stakeholders.<br>Enjoy working in a high-profile environment with fluid priorities, ambiguity and extremely aggressive deadlines.</p><blockquote><p>WHAT YOU NEED TO SUCCEED (MINIMUM QUALIFICATIONS)<br>Embraces diverse people, thinking and styles<br>Consistently makes safety and security, of self and others, the priority<br>High School diploma, GED or High School Equivalency<br>Where permitted by applicable law, must have received or be willing to receive the COVID-19 vaccine by date of hire to be considered for U.S.-based job, if not currently employed by Delta Air Lines, Inc.<br>3 years work experience in analysis, information science, data visualization, or other relevant quantitative field preferred.<br>Previous experience identifying, cleaning, and structuring new data sources preferred<br>Must be comfortable working in group and individual settings.<br>Successful candidates will have experience with some or all of the following: SQL, SAS, R, Tableau or other database interface tools and languages like Visual Basic, Perl, Python, UNIX or other basic functional programming tools</p></blockquote>',	'uploads/job_description/uploaded_jd-1624642287782.pdf',	'Central African Republic',	'41',	'Haute-Kotto',	'690',	'Ouadda',	'10883',	'194-B Clerk Colony Indore M.P',	'452001',	'',	0,	'',	'5',	NULL,	2,	231,	'United States',	3975,	'Washington',	'Edmonds',	'46802',	'194-B Clerk Colony Indore M.P',	'452001',	2,	'5 - 8'),
+(16,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'7b082840919e91584d6ea2079abaed59',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	'Company',	'j.meenesh@mailinator.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	1,	0,	'Meenesh',	7,	1,	'',	'',	'',	'',	'Home',	'-1',	'Call Center Support',	NULL,	NULL,	NULL,	'[object Object]',	'101',	'[object Object]',	'3',	'[object Object]',	'301',	'194-B Clerk Colony Indore M.P',	'452001',	NULL,	NULL,	NULL,	'1',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	'Admin',	'admin@zestboard.com',	'Super',	'Admin',	'202cb962ac59075b964b07152d234b70',	1,	0,	'admin@zestboard.com',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	'Company',	'mailinator@mailinator.com',	'Meenesh',	'Jain',	'a600d9a757fe179df18a1350d55771c6',	0,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'Home',	'-1',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	'Student',	'j.meenesh111111@gmail.com',	'Meenesh',	'Jain',	'a93917f93dfd4f2dda91d42c07de199e',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
--- 2021-07-12 10:14:46
+-- 2021-08-19 09:54:47

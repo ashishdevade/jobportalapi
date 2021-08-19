@@ -290,4 +290,26 @@ router.post('/admin/admin_validate_login', adminModel.admin_validate_login, func
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/admin/get_all_companies', adminModel.get_all_companies, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/admin/get_all_candidate_users', adminModel.get_all_candidate_users, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/admin/admin_user_change_password', adminModel.admin_user_change_password, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/admin/update_admin_user_edit', adminModel.update_admin_user_edit, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/admin/soft_delete_user', adminModel.soft_delete_user, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+
+
 module.exports = router;
