@@ -21,7 +21,7 @@ module.exports.admin_validate_login = function (req, res, next) {
 		var email = (req.body.email != undefined && req.body.email != null) ? req.body.email : "";
 		var password = (req.body.password != undefined && req.body.password != null) ? req.body.password : "";
 		if (email != "" && password != "") {
-			var login_query = "SELECT * FROM user_account WHERE email_id = '" + email + "' AND password = MD5('" + password + "') AND account_type = 'Admin'";
+			var login_query = "SELECT * FROM user_account WHERE email_id = '" + email + "' AND password = MD5('" + password + "') AND account_type = 'Admin' AND status = '1'";
 			console.log("login_query ", login_query);
 			db.query(login_query, function (err, result, fields) {
 				if (err) return res.status(200).send({ status: 500, data: err });
