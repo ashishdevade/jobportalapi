@@ -310,6 +310,17 @@ router.post('/admin/soft_delete_user', adminModel.soft_delete_user, function (re
   // res.json({ status : res.status, message: res.message });
 });
 
+router.post('/admin/get_all_masters_data', adminModel.get_all_masters_data, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/admin/add_update_master_data', adminModel.add_update_master_data, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/admin/delete_master_data', adminModel.delete_master_data, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
 
 
 module.exports = router;

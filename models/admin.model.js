@@ -177,3 +177,175 @@ module.exports.soft_delete_user = function (req, res, next) {
 		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 	} 
 }
+
+module.exports.get_all_masters_data = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var search = (req.body.search != undefined && req.body.search != null) ? req.body.search : "";
+		var screen = (req.body.screen != undefined && req.body.screen != null) ? req.body.screen : "";
+		var id     = (req.body.id != undefined && req.body.id != null) ? req.body.id : "";
+		
+		var where_and = '';
+		
+		if(screen == 'job-profile'){
+			if(search!= ''){
+				where_and = ' WHERE  (profile_name LIKE "%'+search+'%" ) ';
+			}
+			
+			if(id!= ''){
+				where_and = 'WHERE id = "'+ id +'"';
+			}
+			
+			var sql = "SELECT id, profile_name as name FROM job_profiles  " + where_and;
+			
+		} else if(screen == 'job-category') {
+			if(search!= ''){
+				where_and = ' WHERE  (category LIKE "%'+search+'%" ) ';
+			}
+			
+			if(id!= ''){
+				where_and = 'WHERE category_id = "'+ id +'"';
+			}
+			
+			var sql = "SELECT category_id as id, name FROM category  " + where_and;
+			
+		} else if(screen == 'job-subcategory') {
+			if(search!= ''){
+				where_and = ' WHERE  (subcategory_name LIKE "%'+search+'%" ) ';
+			}
+			
+			if(id!= ''){
+				where_and = 'WHERE id = "'+ id +'"';
+			}
+			
+			var sql = "SELECT id, sub.category_id, subcategory_name as name, cat.name as category FROM subcategories as sub LEFT JOIN category as cat ON cat.category_id =  sub.category_id  " + where_and;
+			
+		} else if(screen == 'industries') {
+			if(search!= ''){
+				where_and = ' WHERE  (industry_name LIKE "%'+search+'%" ) ';
+			}
+			
+			if(id!= ''){
+				where_and = 'WHERE id = "'+ id +'"';
+			}
+			
+			var sql = "SELECT id, industry_name as name, access_type FROM industry  " + where_and;
+			
+		} else if(screen == 'skills') {
+			if(search!= ''){
+				where_and = ' WHERE  (skill_name LIKE "%'+search+'%" ) ';
+			}
+			
+			if(id!= ''){
+				where_and = 'WHERE skill_id = "'+ id +'"';
+			}
+			
+			var sql = "SELECT skill_id as id, skill_name as name, category FROM skill  " + where_and;
+			
+		}  else if(screen == 'skills-category') {
+			var sql = "SELECT category_no as id, category as name from skill group by category order by category_no ";
+		} 
+		
+		
+		console.log("sql ", sql );
+		db.query(sql, function (err, result, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+
+			return res.status(200).send({ status: 200, data: result });
+		});
+		
+	} else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.add_update_master_data = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		
+		var screen            = (req.body.screen != undefined && req.body.screen != null) ? req.body.screen : "";
+		var master_id         = (req.body.master_id != undefined && req.body.master_id != null) ? req.body.master_id : "";
+		var name              = (req.body.name != undefined && req.body.name != null) ? req.body.name : "";
+		var category_id       = (req.body.category_id != undefined && req.body.category_id != null) ? req.body.category_id : "";
+		var category_name     = (req.body.category_name != undefined && req.body.category_name != null) ? req.body.category_name : "";
+		var access_type       = (req.body.access_type != undefined && req.body.access_type != null) ? req.body.access_type : "";
+		
+		var sqlQuery = '';
+		
+		if (master_id == -1) {
+			if(screen == 'job-profile'){
+				sqlQuery = 'INSERT INTO job_profiles SET profile_name = "'+ name +'" ';
+				
+			} else if(screen == 'job-category') {
+				sqlQuery = 'INSERT INTO category SET name = "'+ name +'" ';
+			} else if(screen == 'job-subcategory') {
+				sqlQuery = 'INSERT INTO subcategories SET subcategory_name = "'+ name +'", category_id = "'+ category_id +'" ';
+			} else if(screen == 'industries') {
+				sqlQuery = 'INSERT INTO industry SET industry_name = "'+ name +'", access_type = "'+ access_type +'" ';
+			} else if(screen == 'skills') {
+				sqlQuery = 'INSERT INTO skill SET skill_name = "'+ name +'", category_no = "'+ category_id +'", category = "'+ category_name +'" ';
+			}
+		} else {
+			if(screen == 'job-profile'){
+				sqlQuery = 'UPDATE job_profiles SET profile_name = "'+ name +'" WHERE id = "'+ master_id +'" ';
+				
+			} else if(screen == 'job-category') {
+				sqlQuery = 'UPDATE category SET name = "'+ name +'" WHERE category_id = "'+ master_id +'" ';
+			} else if(screen == 'job-subcategory') {
+				sqlQuery = 'UPDATE subcategories SET subcategory_name = "'+ name +'", category_id = "'+ category_id +'"  WHERE id = "'+ master_id +'" ';
+			} else if(screen == 'industries') {
+				sqlQuery = 'UPDATE industry SET industry_name = "'+ name +'", access_type = "'+ access_type +'" WHERE id = "'+ master_id +'" ';
+			} else if(screen == 'skills') {
+				sqlQuery = 'UPDATE skill SET skill_name = "'+ name +'", category_no = "'+ category_id +'", category = "'+ category_name +'" WHERE skill_id = "'+ master_id +'" ';
+			}
+		}
+		
+		console.log("sqlQuery ", sqlQuery );
+
+		db.query(sqlQuery, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			let resultset = {
+				"screen" : screen,
+				"master_id" : master_id,
+				"name" : name,
+				"category_id" : category_id,
+				"category_name" : category_name,
+				"access_type " : access_type ,
+			}
+			
+			return res.status(200).send({ status: 200, data: resultset });		
+		});
+		
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
+
+module.exports.delete_master_data = function (req, res, next) {
+	if (Object.keys(req.body).length > 0) {
+		var screen  = (req.body.screen != undefined && req.body.screen != null) ? req.body.screen : "";
+		var master_id  = (req.body.master_id != undefined && req.body.master_id != null) ? req.body.master_id : "";
+		if(screen == 'job-profile'){
+			var delete_query = 'DELETE FROM job_profiles WHERE id = "'+master_id+'"';
+		} else if(screen == 'job-category') {
+			var delete_query = 'DELETE FROM category WHERE category_id = "'+master_id+'"';
+		} else if(screen == 'job-subcategory') {
+			var delete_query = 'DELETE FROM subcategories WHERE id = "'+master_id+'"';
+		} else if(screen == 'industries') {
+			var delete_query = 'DELETE FROM industry WHERE id = "'+master_id+'"';
+		} else if(screen == 'skills') {
+			var delete_query = 'DELETE FROM skill WHERE skill_id = "'+master_id+'"';
+		}
+		
+		db.query(delete_query, function (error, result, fields) {
+			if (error) return res.status(500).send({ status: 600, msg: error.message });
+			
+			let resultset = { 
+				'master_id' : master_id,
+				'screen' : screen
+			}
+			
+			return res.status(200).send({ status: 200, data: resultset });
+		});
+	}  else {
+		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+	} 
+}
