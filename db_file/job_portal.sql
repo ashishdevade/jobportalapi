@@ -5,6 +5,8 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+DROP DATABASE IF EXISTS `job_portal`;
+CREATE DATABASE `job_portal` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `job_portal`;
 
 DROP TABLE IF EXISTS `category`;
@@ -48312,6 +48314,68 @@ INSERT INTO `industry` (`id`, `industry_name`, `access_type`) VALUES
 (61,	'Telecommunication',	'Student'),
 (62,	'Transportation',	'Student');
 
+DROP TABLE IF EXISTS `job_posting`;
+CREATE TABLE `job_posting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `company_id` int(11) DEFAULT NULL,
+  `job_title` varchar(350) DEFAULT NULL,
+  `job_description` longtext,
+  `candidate_required_description` longtext,
+  `expert_level` varchar(200) DEFAULT NULL COMMENT 'beginner |  intermediate | expert',
+  `location_country_id` int(11) DEFAULT NULL,
+  `location_country` varchar(200) DEFAULT NULL,
+  `category` int(11) DEFAULT NULL,
+  `job_profile_id` int(11) DEFAULT NULL,
+  `industry_id` text,
+  `skills_list` text COMMENT 'Some skills multi select',
+  `rate_type` varchar(20) DEFAULT NULL COMMENT 'hourly | fixed',
+  `hourly_rate_from` varchar(20) DEFAULT NULL,
+  `hourly_rate_to` varchar(20) DEFAULT NULL,
+  `fixed_rate` varchar(20) DEFAULT NULL COMMENT 'Complete work price',
+  `project_type` varchar(20) DEFAULT NULL COMMENT '1 - short term | 2 - long term ',
+  `project_status` varchar(20) DEFAULT NULL COMMENT '1 - new project | 2 - On going project',
+  `project_length` varchar(150) DEFAULT NULL COMMENT '1- 3 month | 3 - 6 month  | More than 6 months',
+  `candidate_required_type` varchar(20) DEFAULT NULL COMMENT 'part time | full time',
+  `total_candidate_required` int(11) DEFAULT NULL,
+  `minimum_hours_from_candidate` varchar(100) DEFAULT NULL COMMENT '20 hours per week | 30 hours per week | 40 hours per week (full time)',
+  `candidate_country_id` int(11) DEFAULT '0' COMMENT 'optional field',
+  `candidate_country_name` varchar(100) DEFAULT NULL,
+  `candidate_state_id` int(11) DEFAULT NULL,
+  `candidate_state_name` varchar(100) DEFAULT NULL,
+  `candidate_city_id` int(11) DEFAULT '0',
+  `candidate_city_name` varchar(100) DEFAULT NULL,
+  `candidate_language` text,
+  `job_status` varchar(20) DEFAULT NULL COMMENT '2 - active | 3 - inactive | 1 - draft | 4 - expired',
+  `hashtags` text COMMENT 'comma seperated ',
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+TRUNCATE `job_posting`;
+
+DROP TABLE IF EXISTS `job_posting_hashtags`;
+CREATE TABLE `job_posting_hashtags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` int(11) NOT NULL,
+  `heading` text NOT NULL,
+  `multiple_hastags` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+TRUNCATE `job_posting_hashtags`;
+
+DROP TABLE IF EXISTS `job_posting_questions`;
+CREATE TABLE `job_posting_questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` int(11) NOT NULL,
+  `question` text NOT NULL,
+  `mandatory` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+TRUNCATE `job_posting_questions`;
+
 DROP TABLE IF EXISTS `job_profiles`;
 CREATE TABLE `job_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -53231,6 +53295,7 @@ CREATE TABLE `user_account` (
   `salary_expectation` varchar(200) DEFAULT NULL,
   `service_fees` varchar(200) DEFAULT NULL,
   `receive_rate` varchar(200) DEFAULT NULL,
+  `company_id` int(11) DEFAULT NULL,
   `company_name` varchar(200) DEFAULT NULL,
   `industry` varchar(200) DEFAULT NULL,
   `other_industry` varchar(300) DEFAULT NULL,
@@ -53265,13 +53330,29 @@ CREATE TABLE `user_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `user_account`;
-INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `status`, `is_deleted`, `user_name`, `profile_completed`, `is_registered_complete`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_name`, `industry`, `other_industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `city_id`, `street_address`, `zipcode`, `country_calling_code`, `country_calling_id`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `location_preference_id`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
-(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	1,	0,	'Nisarg1',	1,	1,	'50',	'3500',	'-4.00',	'16',	'',	'',	'',	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'101',	'Madhya Pradesh',	'21',	'Indore',	'2229',	'194 B Clerk Colony Indore M.P',	'452011',	'(+44) United Kingdom',	44,	'9996547821',	'1',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	NULL,	NULL,	NULL,	NULL),
-(12,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'ceb6c970658f31504a901b89dcd3e461',	1,	0,	'James',	1,	1,	'',	'',	'0.00',	'0.00',	'MI 6 secret Service',	'9',	'',	'Data Analytics',	'<p>HOW YOU\'LL HELP US KEEP CLIMBING (OVERVIEW &amp; KEY RESPONSIBILITIES)<br>The Operational Analytics &nbsp;team provides strategic insight through first understanding business processes and second leveraging data and analytics to drive continuous improvement efforts. The Analytics Specialist will be asked to work closely with leaders to develop creative solutions to current business challenges. We are looking for data curious individuals that seek to understand process and can connect with our business partners to leverage data and drive improvement.</p><blockquote><p>Data has transformed the way Delta operates. The Operational Analytics team is the core of the data strategy, focused on designing the future data environment. The team’s mission is to democratize data building and maintain a data structure that facilitates analysis efforts, KPI creation, Monthly Performance Reporting (MPR), report automation, and front-line analysis tools. You’ll be empowered to constantly innovate data architecture to enable more complex analytic techniques like machine learning. For example, you may be asked to create executive reporting and interactive dashboard tools that monitor Delta’s fuel cost, taking the project from source data curation to delivering recommendations to front-line leaders. The Analytics Specialist will</p></blockquote><p>Locate and extract data from a variety of sources for use in analysis, models and reporting<br>Aggregate views of data sources into meaningful hierarchies<br>Develop automated reports and analyses with direction from other senior members on the team<br>Support process improvement and project management engagements for both individual business units and cross-divisional initiatives<br>Present findings to Operational Analytics leaders<br>Practice safety-conscious behaviors in all operational processes and procedures<br>Have a team first attitude with the success of our team and business partners as their top priority<br>Be intellectually curious, ask questions and speak up when they have an idea<br>Be \"Do-ers\" and are not afraid of failure, but instead learn from each experience and improve<br>Be independent workers who look for problems to solve and then come up with innovative ideas<br>Make things happen without frequent management direction and know when to communicate status or escalate issues to their manager, teammates or stakeholders.<br>Enjoy working in a high-profile environment with fluid priorities, ambiguity and extremely aggressive deadlines.</p><blockquote><p>WHAT YOU NEED TO SUCCEED (MINIMUM QUALIFICATIONS)<br>Embraces diverse people, thinking and styles<br>Consistently makes safety and security, of self and others, the priority<br>High School diploma, GED or High School Equivalency<br>Where permitted by applicable law, must have received or be willing to receive the COVID-19 vaccine by date of hire to be considered for U.S.-based job, if not currently employed by Delta Air Lines, Inc.<br>3 years work experience in analysis, information science, data visualization, or other relevant quantitative field preferred.<br>Previous experience identifying, cleaning, and structuring new data sources preferred<br>Must be comfortable working in group and individual settings.<br>Successful candidates will have experience with some or all of the following: SQL, SAS, R, Tableau or other database interface tools and languages like Visual Basic, Perl, Python, UNIX or other basic functional programming tools</p></blockquote>',	'uploads/job_description/uploaded_jd-1624642287782.pdf',	'Central African Republic',	'41',	'Haute-Kotto',	'690',	'Ouadda',	'10883',	'194-B Clerk Colony Indore M.P',	'452001',	'',	0,	'',	'5',	NULL,	2,	231,	'United States',	3975,	'Washington',	'Edmonds',	'46802',	'194-B Clerk Colony Indore M.P',	'452001',	2,	'5 - 8'),
-(16,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'7b082840919e91584d6ea2079abaed59',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(17,	'Company',	'j.meenesh@mailinator.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	1,	0,	'Meenesh',	7,	1,	'',	'',	'',	'',	'Home',	'-1',	'Call Center Support',	NULL,	NULL,	NULL,	'[object Object]',	'101',	'[object Object]',	'3',	'[object Object]',	'301',	'194-B Clerk Colony Indore M.P',	'452001',	NULL,	NULL,	NULL,	'1',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(18,	'Admin',	'admin@zestboard.com',	'Super',	'Admin',	'202cb962ac59075b964b07152d234b70',	1,	0,	'admin@zestboard.com',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(31,	'Company',	'mailinator@mailinator.com',	'Meenesh',	'Jain',	'a600d9a757fe179df18a1350d55771c6',	0,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'Home',	'-1',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(33,	'Student',	'j.meenesh111111@gmail.com',	'Meenesh',	'Jain',	'a93917f93dfd4f2dda91d42c07de199e',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	'',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `user_account` (`user_account_id`, `account_type`, `email_id`, `first_name`, `last_name`, `password`, `status`, `is_deleted`, `user_name`, `profile_completed`, `is_registered_complete`, `hourly_rate`, `salary_expectation`, `service_fees`, `receive_rate`, `company_id`, `company_name`, `industry`, `other_industry`, `job_title`, `professional_overview`, `uploaded_jd`, `country`, `country_id`, `state`, `state_id`, `city`, `city_id`, `street_address`, `zipcode`, `country_calling_code`, `country_calling_id`, `phone_number`, `job_type`, `profile_photo`, `location_preference`, `prefered_country_id`, `prefered_country`, `prefered_state_id`, `prefered_state`, `location_preference_name`, `location_preference_id`, `prefered_street_address`, `prefered_zipcode`, `timeline_hiring`, `timeline_hiring_weeks`) VALUES
+(1,	'Student',	'nisarg205@gmail.com',	'Nisarg',	'Pandya',	'202cb962ac59075b964b07152d234b70',	1,	0,	'Nisarg1',	1,	1,	'50',	'3500',	'-4.00',	'16',	NULL,	'',	'',	'',	'Full stack developer and mean stack developer',	'Full stack developer and mean stack developer \nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\nFull stack developer and mean stack developer\n',	NULL,	'India',	'101',	'Madhya Pradesh',	'21',	'Indore',	'2229',	'194 B Clerk Colony Indore M.P',	'452011',	'(+44) United Kingdom',	44,	'9996547821',	'1',	'uploads/images/profile_picture/profile_picture-1621319006561.jpg',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	NULL,	NULL,	NULL,	NULL),
+(16,	'Student',	'j.meenesh@gmail.com',	'Meenesh',	'Jain',	'7b082840919e91584d6ea2079abaed59',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	'Company',	'j.meenesh@mailinator.com',	'Meenesh',	'Jain',	'202cb962ac59075b964b07152d234b70',	1,	0,	'Meenesh',	7,	1,	'',	'',	'',	'',	NULL,	'Home',	'-1',	'Call Center Support',	NULL,	NULL,	NULL,	'[object Object]',	'101',	'[object Object]',	'3',	'[object Object]',	'301',	'194-B Clerk Colony Indore M.P',	'452001',	NULL,	NULL,	NULL,	'1',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	'Admin',	'admin@zestboard.com',	'Super',	'Admin',	'202cb962ac59075b964b07152d234b70',	1,	0,	'admin@zestboard.com',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	'Company',	'mailinator@mailinator.com',	'Meenesh',	'Jain',	'a600d9a757fe179df18a1350d55771c6',	0,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	'Home',	'-1',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	'Student',	'j.meenesh111111@gmail.com',	'Meenesh',	'Jain',	'a93917f93dfd4f2dda91d42c07de199e',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(34,	'Company',	'testcompany@gmail.com',	'Meenesh',	'Jain',	'edcaa241aa354fc533d89ea7aba7771c',	1,	0,	'Meenesh',	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	'test Company',	'-1',	'Call Center Support',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(36,	'Company',	'jamesbond@malinator.com',	'James',	'Bond',	'202cb962ac59075b964b07152d234b70',	1,	0,	'James',	0,	1,	NULL,	NULL,	NULL,	NULL,	2,	'MI 6 secret Service',	'8',	'',	NULL,	NULL,	NULL,	'India',	'101',	'Madhya Pradesh',	'21',	'Indore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
--- 2021-08-19 09:54:47
+DROP TABLE IF EXISTS `user_company`;
+CREATE TABLE `user_company` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `company_name` varchar(500) NOT NULL,
+  `industry` int(11) NOT NULL,
+  `other_industry` varchar(200) NOT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+TRUNCATE `user_company`;
+INSERT INTO `user_company` (`id`, `company_name`, `industry`, `other_industry`, `created_date`, `updated_date`) VALUES
+(2,	'MI 6 secret Service',	8,	'',	'2021-09-25 18:18:57',	'2021-09-25 18:18:57');
+
+-- 2021-09-25 18:20:57

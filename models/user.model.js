@@ -73,8 +73,9 @@ module.exports.register_user = function (req, res, next) {
 				db.query(sqlQuery, data, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					if (result.insertId > 0) {
+						let user_id = result.insertId;
 						let resultset = {
-							"user_account_id": result.insertId,
+							"user_account_id": user_id,
 							"user_name": firstname,
 							"account_type": account_type,
 							"firstname": firstname,
@@ -86,15 +87,38 @@ module.exports.register_user = function (req, res, next) {
 							"other_industry": other_industry,
 						}
 						
-						var full_name = firstname + ' ' + lastname;
-						email_functions.send_registration_mail(full_name, email, password, (response)=>{
-							console.log("response ", response);
-							if(response == true){
-								return res.status(200).send({ status: 200, data: resultset });
-							} else{
-								return res.status(500).send({ code: 600, msg: 'Unable to send email' });
+						if(account_type == 'Company'){
+							var data = {
+								"company_name" : company_name,
+								"industry" : industry,
+								"other_industry" : other_industry,
+								"created_date" : new Date(),
+								"updated_date" : new Date(),
+								
 							}
-						});
+
+							var sqlQuery = 'INSERT INTO user_company SET ? ';
+							db.query(sqlQuery, data, function (error, result, fields) {
+								if (error) return res.status(500).send({ status: 600, msg: error.message });
+								let company_id = result.insertId;
+								var updateUser = 'UPDATE user_account SET company_id = "' + company_id + '" WHERE user_account_id = "' + user_id + '"';
+								db.query(updateUser, function (error, result, fields) {
+									if (error) return res.status(500).send({ status: 600, msg: error.message });
+
+									var full_name = firstname + ' ' + lastname;
+									email_functions.send_registration_mail(full_name, email, password, (response) => {
+										console.log("response ", response);
+										if (response == true) {
+											return res.status(200).send({ status: 200, data: resultset });
+										} else {
+											return res.status(500).send({ code: 600, msg: 'Unable to send email' });
+										}
+									});
+								});
+							});
+						}
+						
+						
 					} else {
 						return res.status(201).send({ status: 201, msg: 'user not created. Something went wrong' });
 					}
@@ -209,8 +233,8 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 			} else if(type == "user-account") {
 				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, uploaded_jd, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry, status FROM user_account WHERE user_account_id = '"+user_id+"'";
 					// console.log("user_account_query " , user_account_query);
-				db.query(user_account_query, function (err, result, fields) {
-					if (err) return res.status(200).send({ status: 500, data: err });
+					db.query(user_account_query, function (err, result, fields) {
+						if (err) return res.status(200).send({ status: 500, data: err });
 					// console.log("result " , result[0]);
 					var path = result[0]['profile_photo'];
 					if(path != ""){
@@ -220,278 +244,303 @@ module.exports.get_user_profile_settings = function (req, res, next) {
 					}
 					return res.status(200).send({ status: 200, data: result });
 				});
-				
-			}  else if(type == "location-preference") {
-				db.query("SELECT location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
-					if (err) return res.status(200).send({ status: 500, data: err });
-
-					return res.status(200).send({ status: 200, data: result });
-				});
-			}  else if(type == "timeline-hiring") {
-				db.query("SELECT timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
-					if (err) return res.status(200).send({ status: 500, data: err });
-
-					return res.status(200).send({ status: 200, data: result });
-				});
-			}  else if(type == "review") {
-				var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry, status FROM user_account WHERE user_account_id = '"+user_id+"'";
-				var student_category_query = "SELECT sc.*, cat.profile_name as profile_name,  industry_name FROM student_category as sc  LEFT JOIN  job_profiles  as cat ON sc.category_id = cat.id LEFT JOIN industry as subcat ON sc.subcategory_id = subcat.id  WHERE student_id = '"+user_id+"'"
-				var student_expertise_query = "SELECT * FROM student_expertise WHERE student_id = '"+user_id+"'";
-				var student_education_query = "SELECT * FROM student_education WHERE student_id = '"+user_id+"'";
-				var student_experience_query = "SELECT * FROM student_experience WHERE student_id = '"+user_id+"'";
-				var student_languages_query = "SELECT * FROM student_languages WHERE student_id = '"+user_id+"' ORDER BY id ASC";
-				var student_project_query = "SELECT * FROM student_project WHERE student_id = '"+user_id+"'";
-				var student_certificate_query = "SELECT * FROM student_certificate WHERE student_id = '"+user_id+"'";
-				
-				db.query(user_account_query + ";" + student_category_query + ";" + student_expertise_query + ";" + student_education_query + ";" + student_experience_query + ";" + student_languages_query + ";" + student_project_query + ";" + student_certificate_query, function (err, result, fields) {
-					if (err) return res.status(200).send({ status: 500, data: err });
-					var user_account_details = result;
-					var path = result[0][0]['profile_photo'];
-					if(path != ""){
-						if (!fs.existsSync(path)) {
-							result[0][0]['profile_photo'] = "";
-						} 
-					}
 					
-					let return_response = {
-						"user_account_data" : result[0],
-						"category_data" : result[1],
-						"expertise_data" : result[2],
-						"education_data" : result[3],
-						"experience_data" : result[4],
-						"languages_data" : result[5],
-						"project_data" : result[6],
-						"certificate_data" : result[7],
-					}
+				}  else if(type == "location-preference") {
+					db.query("SELECT location_preference, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+						if (err) return res.status(200).send({ status: 500, data: err });
 
-					return res.status(200).send({ status: 200, data: return_response });
-				});
+						return res.status(200).send({ status: 200, data: result });
+					});
+				}  else if(type == "timeline-hiring") {
+					db.query("SELECT timeline_hiring, timeline_hiring_weeks FROM user_account WHERE user_account_id = '"+user_id+"'", function (err, result, fields) {
+						if (err) return res.status(200).send({ status: 500, data: err });
+
+						return res.status(200).send({ status: 200, data: result });
+					});
+				}  else if(type == "review") {
+					var user_account_query = "SELECT industry, company_name, first_name, last_name, email_id, user_name, account_type, hourly_rate, service_fees, receive_rate, job_type, salary_expectation, job_title, professional_overview, country_id, country, state_id, state, city_id, city, street_address, zipcode, country_calling_code,country_calling_id, phone_number, job_type,  profile_photo, location_preference, uploaded_jd, prefered_country_id,  prefered_country, prefered_state_id, prefered_state, location_preference_name, location_preference_id, prefered_street_address, prefered_zipcode, timeline_hiring, timeline_hiring_weeks, profile_completed, other_industry, status FROM user_account WHERE user_account_id = '"+user_id+"'";
+					var student_category_query = "SELECT sc.*, cat.profile_name as profile_name,  industry_name FROM student_category as sc  LEFT JOIN  job_profiles  as cat ON sc.category_id = cat.id LEFT JOIN industry as subcat ON sc.subcategory_id = subcat.id  WHERE student_id = '"+user_id+"'"
+					var student_expertise_query = "SELECT * FROM student_expertise WHERE student_id = '"+user_id+"'";
+					var student_education_query = "SELECT * FROM student_education WHERE student_id = '"+user_id+"'";
+					var student_experience_query = "SELECT * FROM student_experience WHERE student_id = '"+user_id+"'";
+					var student_languages_query = "SELECT * FROM student_languages WHERE student_id = '"+user_id+"' ORDER BY id ASC";
+					var student_project_query = "SELECT * FROM student_project WHERE student_id = '"+user_id+"'";
+					var student_certificate_query = "SELECT * FROM student_certificate WHERE student_id = '"+user_id+"'";
+					
+					db.query(user_account_query + ";" + student_category_query + ";" + student_expertise_query + ";" + student_education_query + ";" + student_experience_query + ";" + student_languages_query + ";" + student_project_query + ";" + student_certificate_query, function (err, result, fields) {
+						if (err) return res.status(200).send({ status: 500, data: err });
+						var user_account_details = result;
+						var path = result[0][0]['profile_photo'];
+						if(path != ""){
+							if (!fs.existsSync(path)) {
+								result[0][0]['profile_photo'] = "";
+							} 
+						}
+						
+						let return_response = {
+							"user_account_data" : result[0],
+							"category_data" : result[1],
+							"expertise_data" : result[2],
+							"education_data" : result[3],
+							"experience_data" : result[4],
+							"languages_data" : result[5],
+							"project_data" : result[6],
+							"certificate_data" : result[7],
+						}
+
+						return res.status(200).send({ status: 200, data: return_response });
+					});
+					
+				}  else {
+					return res.status(200).send({ code: 600, msg: 'Type Parameter Missing' });
+					
+				}
 				
-			}  else {
-				return res.status(200).send({ code: 600, msg: 'Type Parameter Missing' });
-				
+			} else {
+				return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 			}
-			
-		} else {
-			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
 		}
 	}
-}
 
 
-module.exports.get_all_categories = function (req, res, next) {
-	
-	db.query("SELECT category_id, name FROM category", function (err, result, fields) {
-		if (err) return res.status(200).send({ status: 500, data: err });
+	module.exports.get_all_categories = function (req, res, next) {
+		
+		db.query("SELECT category_id, name FROM category", function (err, result, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
 
-		return res.status(200).send({ status: 200, data: result });
-	});
-}
+			return res.status(200).send({ status: 200, data: result });
+		});
+	}
 
-module.exports.get_all_subcategories = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var category_id = (req.body.category_id != undefined && req.body.category_id != null) ? req.body.category_id : "";
-		if(category_id!= ""){
-			db.query("SELECT id, subcategory_name  FROM subcategories WHERE category_id = '"+category_id+"'", function (err, result, fields) {
+	module.exports.get_all_subcategories = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var category_id = (req.body.category_id != undefined && req.body.category_id != null) ? req.body.category_id : "";
+			if(category_id!= ""){
+				db.query("SELECT id, subcategory_name  FROM subcategories WHERE category_id = '"+category_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			} else {
+				return res.status(200).send({ code: 600, msg: 'No Category ID Passed' });
+				
+			}
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.update_profile_category = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var category = (req.body.category != undefined && req.body.category != null) ? req.body.category : "";
+			var subcategory = (req.body.subcategory != undefined && req.body.subcategory != null) ? req.body.subcategory : "";
+			var industry_description = (req.body.industry_description != undefined && req.body.industry_description != null) ? req.body.industry_description : "";
+			var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			var access_type = (req.body.access_type != undefined && req.body.access_type != null) ? req.body.access_type : "";
+			db.query("SELECT * FROM student_category WHERE student_id = '" + user_id + "'", function (err, result, fields) {
 				if (err) return res.status(200).send({ status: 500, data: err });
+				if (result.length == 0) {
+					var sqlQuery = "";
+					var data = [];
+					if(access_type == 'Student'){
+						sqlQuery = 'INSERT INTO student_category SET category_id = ? , subcategory_id = ?, industry_description = ?,  student_id = ?';
+						data = [category, subcategory, industry_description, user_id];
+						
+					} else if(access_type == 'Company'){
+						sqlQuery = 'INSERT INTO student_category SET category_id = ? , team_department = ?, student_id = ?';
+						data = [category, subcategory, user_id];
+					}
+					
+					db.query(sqlQuery, data, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						
+						var updateUser = 'UPDATE user_account SET profile_completed = "1" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"category_id": category,
+								"subcategory_id": subcategory,
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+					});
+				} else {
+					var sqlQuery = "";
+					if(access_type == 'Student'){
+						sqlQuery = 'UPDATE student_category SET category_id = "'+ category +'" , subcategory_id = "'+ subcategory +'", industry_description = "'+ industry_description +'" WHERE student_id = "'+user_id+'"';
+					} else if(access_type == 'Company'){
+						sqlQuery = 'UPDATE student_category SET category_id = "'+ category +'" , team_department = "'+ subcategory +'" WHERE student_id = "'+user_id+'"';
+					}
+					db.query(sqlQuery, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						
+						var updateUser = 'UPDATE user_account SET profile_completed = "1" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"category_id": category,
+								"subcategory_id": subcategory,
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+						
+					});
+				}
+			});
+		}  else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
 
-				return res.status(200).send({ status: 200, data: result });
+	module.exports.update_profile_expertise = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var skills = (req.body.skills != undefined && req.body.skills != null) ? req.body.skills : "";
+			var other = (req.body.other != undefined && req.body.other != null) ? req.body.other : "";
+			var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			db.query("SELECT * FROM student_expertise WHERE student_id = '" + user_id + "'", function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+				if (result.length == 0) {
+					var sqlQuery = 'INSERT INTO student_expertise SET skills = ?, others = ?, student_id = ?';
+					var data = [JSON.stringify(skills), other, user_id];
+					db.query(sqlQuery, data, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						
+						var updateUser = 'UPDATE user_account SET profile_completed = "2" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"skills": skills,
+								"others": other
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+					});
+				} else {
+					let skill_set = JSON.stringify(skills);
+					var sqlQuery = "UPDATE student_expertise SET skills = '"+ skill_set +"', others = '"+ other +"' WHERE student_id = '"+ user_id + "'";
+					console.log("sqlQuery ", sqlQuery);
+					db.query(sqlQuery, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						
+						var updateUser = 'UPDATE user_account SET profile_completed = "2" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"skills": skills,
+								"others": other
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+						
+					});
+				}
+			});
+		}  else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.update_profile_expertise_level = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var level = (req.body.level != undefined && req.body.level != null) ? req.body.level : "";
+			var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			db.query("SELECT * FROM student_expertise WHERE student_id = '" + user_id + "'", function (err, result, fields) {
+				if (err) return res.status(200).send({ status: 500, data: err });
+				if (result.length == 0) {
+					var sqlQuery = 'INSERT INTO student_expertise SET level = ?, student_id = ?';
+					var data = [level, user_id];
+					db.query(sqlQuery, data, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						
+						var updateUser = 'UPDATE user_account SET profile_completed = "3" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"expertise_level": level,
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+					});
+				} else {
+					var sqlQuery = 'UPDATE student_expertise SET level = "'+ level +'" WHERE student_id = "'+user_id+'"';
+					db.query(sqlQuery, function (error, result, fields) {
+						if (error) return res.status(500).send({ status: 600, msg: error.message });
+						
+						var updateUser = 'UPDATE user_account SET profile_completed = "3" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"expertise_level": level,
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+						
+					});
+				}
 			});
 			
-		} else {
-			return res.status(200).send({ code: 600, msg: 'No Category ID Passed' });
 			
-		}
-	} else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
+		}  else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
 
-module.exports.update_profile_category = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var category = (req.body.category != undefined && req.body.category != null) ? req.body.category : "";
-		var subcategory = (req.body.subcategory != undefined && req.body.subcategory != null) ? req.body.subcategory : "";
-		var industry_description = (req.body.industry_description != undefined && req.body.industry_description != null) ? req.body.industry_description : "";
-		var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		var access_type = (req.body.access_type != undefined && req.body.access_type != null) ? req.body.access_type : "";
-		db.query("SELECT * FROM student_category WHERE student_id = '" + user_id + "'", function (err, result, fields) {
-			if (err) return res.status(200).send({ status: 500, data: err });
-			if (result.length == 0) {
-				var sqlQuery = "";
-				var data = [];
-				if(access_type == 'Student'){
-					sqlQuery = 'INSERT INTO student_category SET category_id = ? , subcategory_id = ?, industry_description = ?,  student_id = ?';
-					data = [category, subcategory, industry_description, user_id];
-					
-				} else if(access_type == 'Company'){
-					sqlQuery = 'INSERT INTO student_category SET category_id = ? , team_department = ?, student_id = ?';
-					data = [category, subcategory, user_id];
-				}
-				
+	module.exports.add_update_profile_education = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var school       = (req.body.school != undefined && req.body.school != null) ? req.body.school : "";
+			var study        = (req.body.study != undefined && req.body.study != null) ? req.body.study : "";
+			var degree       = (req.body.degree != undefined && req.body.degree != null) ? req.body.degree : "";
+			var from_year    = (req.body.from_year != undefined && req.body.from_year != null) ? req.body.from_year : "";
+			var to_year      = (req.body.to_year != undefined && req.body.to_year != null) ? req.body.to_year : "";
+			var description  = (req.body.description != undefined && req.body.description != null) ? req.body.description : "";
+			var education_id = (req.body.education_id != undefined && req.body.education_id != null) ? req.body.education_id : "";
+			var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			
+			
+			if (education_id == -1) {
+				var sqlQuery = 'INSERT INTO student_education SET school = ?, description = ?, study = ?, student_id = ?, degree = ?, from_year = ?, to_year = ?';
+				var data = [school, description, study, user_id, degree, from_year, to_year];
 				db.query(sqlQuery, data, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
+					if (result.insertId > 0) {
+						var updateUser = 'UPDATE user_account SET profile_completed = "4" WHERE user_account_id = "'+user_id+'"';
+						db.query(updateUser, function (error, result, fields) {
+							if (error) return res.status(500).send({ status: 600, msg: error.message });
+							
+							let resultset = {
+								"school" : school,
+								"study" : study,
+								"degree" : degree,
+								"from_year" : from_year,
+								"to_year" : to_year,
+								"description" : description,
+								"education_id" : result.insertId,
+								"user_id" : user_id,
+							}
+							
+							return res.status(200).send({ status: 200, data: resultset });
+						});
+					}
 					
-					var updateUser = 'UPDATE user_account SET profile_completed = "1" WHERE user_account_id = "'+user_id+'"';
-					db.query(updateUser, function (error, result, fields) {
-						if (error) return res.status(500).send({ status: 600, msg: error.message });
-						
-						let resultset = {
-							"category_id": category,
-							"subcategory_id": subcategory,
-						}
-						
-						return res.status(200).send({ status: 200, data: resultset });
-					});
 				});
 			} else {
-				var sqlQuery = "";
-				if(access_type == 'Student'){
-					sqlQuery = 'UPDATE student_category SET category_id = "'+ category +'" , subcategory_id = "'+ subcategory +'", industry_description = "'+ industry_description +'" WHERE student_id = "'+user_id+'"';
-				} else if(access_type == 'Company'){
-					sqlQuery = 'UPDATE student_category SET category_id = "'+ category +'" , team_department = "'+ subcategory +'" WHERE student_id = "'+user_id+'"';
-				}
+				var sqlQuery = 'UPDATE student_education SET school = "'+ school +'", study = "'+ study +'", degree = "'+ degree +'", from_year = "'+ from_year +'", to_year = "'+ to_year +'", description = "'+ description +'" WHERE student_id = "'+user_id+'" AND student_education_id = "'+education_id+'" ';
 				db.query(sqlQuery, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 					
-					var updateUser = 'UPDATE user_account SET profile_completed = "1" WHERE user_account_id = "'+user_id+'"';
-					db.query(updateUser, function (error, result, fields) {
-						if (error) return res.status(500).send({ status: 600, msg: error.message });
-						
-						let resultset = {
-							"category_id": category,
-							"subcategory_id": subcategory,
-						}
-						
-						return res.status(200).send({ status: 200, data: resultset });
-					});
-					
-				});
-			}
-		});
-	}  else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
-
-module.exports.update_profile_expertise = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var skills = (req.body.skills != undefined && req.body.skills != null) ? req.body.skills : "";
-		var other = (req.body.other != undefined && req.body.other != null) ? req.body.other : "";
-		var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		db.query("SELECT * FROM student_expertise WHERE student_id = '" + user_id + "'", function (err, result, fields) {
-			if (err) return res.status(200).send({ status: 500, data: err });
-			if (result.length == 0) {
-				var sqlQuery = 'INSERT INTO student_expertise SET skills = ?, others = ?, student_id = ?';
-				var data = [JSON.stringify(skills), other, user_id];
-				db.query(sqlQuery, data, function (error, result, fields) {
-					if (error) return res.status(500).send({ status: 600, msg: error.message });
-					
-					var updateUser = 'UPDATE user_account SET profile_completed = "2" WHERE user_account_id = "'+user_id+'"';
-					db.query(updateUser, function (error, result, fields) {
-						if (error) return res.status(500).send({ status: 600, msg: error.message });
-						
-						let resultset = {
-							"skills": skills,
-							"others": other
-						}
-						
-						return res.status(200).send({ status: 200, data: resultset });
-					});
-				});
-			} else {
-				let skill_set = JSON.stringify(skills);
-				var sqlQuery = "UPDATE student_expertise SET skills = '"+ skill_set +"', others = '"+ other +"' WHERE student_id = '"+ user_id + "'";
-				console.log("sqlQuery ", sqlQuery);
-				db.query(sqlQuery, function (error, result, fields) {
-					if (error) return res.status(500).send({ status: 600, msg: error.message });
-					
-					var updateUser = 'UPDATE user_account SET profile_completed = "2" WHERE user_account_id = "'+user_id+'"';
-					db.query(updateUser, function (error, result, fields) {
-						if (error) return res.status(500).send({ status: 600, msg: error.message });
-						
-						let resultset = {
-							"skills": skills,
-							"others": other
-						}
-						
-						return res.status(200).send({ status: 200, data: resultset });
-					});
-					
-				});
-			}
-		});
-	}  else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
-
-module.exports.update_profile_expertise_level = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var level = (req.body.level != undefined && req.body.level != null) ? req.body.level : "";
-		var user_id = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		db.query("SELECT * FROM student_expertise WHERE student_id = '" + user_id + "'", function (err, result, fields) {
-			if (err) return res.status(200).send({ status: 500, data: err });
-			if (result.length == 0) {
-				var sqlQuery = 'INSERT INTO student_expertise SET level = ?, student_id = ?';
-				var data = [level, user_id];
-				db.query(sqlQuery, data, function (error, result, fields) {
-					if (error) return res.status(500).send({ status: 600, msg: error.message });
-					
-					var updateUser = 'UPDATE user_account SET profile_completed = "3" WHERE user_account_id = "'+user_id+'"';
-					db.query(updateUser, function (error, result, fields) {
-						if (error) return res.status(500).send({ status: 600, msg: error.message });
-						
-						let resultset = {
-							"expertise_level": level,
-						}
-						
-						return res.status(200).send({ status: 200, data: resultset });
-					});
-				});
-			} else {
-				var sqlQuery = 'UPDATE student_expertise SET level = "'+ level +'" WHERE student_id = "'+user_id+'"';
-				db.query(sqlQuery, function (error, result, fields) {
-					if (error) return res.status(500).send({ status: 600, msg: error.message });
-					
-					var updateUser = 'UPDATE user_account SET profile_completed = "3" WHERE user_account_id = "'+user_id+'"';
-					db.query(updateUser, function (error, result, fields) {
-						if (error) return res.status(500).send({ status: 600, msg: error.message });
-						
-						let resultset = {
-							"expertise_level": level,
-						}
-						
-						return res.status(200).send({ status: 200, data: resultset });
-					});
-					
-				});
-			}
-		});
-		
-		
-	}  else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
-
-module.exports.add_update_profile_education = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var school       = (req.body.school != undefined && req.body.school != null) ? req.body.school : "";
-		var study        = (req.body.study != undefined && req.body.study != null) ? req.body.study : "";
-		var degree       = (req.body.degree != undefined && req.body.degree != null) ? req.body.degree : "";
-		var from_year    = (req.body.from_year != undefined && req.body.from_year != null) ? req.body.from_year : "";
-		var to_year      = (req.body.to_year != undefined && req.body.to_year != null) ? req.body.to_year : "";
-		var description  = (req.body.description != undefined && req.body.description != null) ? req.body.description : "";
-		var education_id = (req.body.education_id != undefined && req.body.education_id != null) ? req.body.education_id : "";
-		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		
-		
-		if (education_id == -1) {
-			var sqlQuery = 'INSERT INTO student_education SET school = ?, description = ?, study = ?, student_id = ?, degree = ?, from_year = ?, to_year = ?';
-			var data = [school, description, study, user_id, degree, from_year, to_year];
-			db.query(sqlQuery, data, function (error, result, fields) {
-				if (error) return res.status(500).send({ status: 600, msg: error.message });
-				if (result.insertId > 0) {
 					var updateUser = 'UPDATE user_account SET profile_completed = "4" WHERE user_account_id = "'+user_id+'"';
 					db.query(updateUser, function (error, result, fields) {
 						if (error) return res.status(500).send({ status: 600, msg: error.message });
@@ -503,160 +552,135 @@ module.exports.add_update_profile_education = function (req, res, next) {
 							"from_year" : from_year,
 							"to_year" : to_year,
 							"description" : description,
-							"education_id" : result.insertId,
+							"education_id" : education_id,
 							"user_id" : user_id,
 						}
 						
 						return res.status(200).send({ status: 200, data: resultset });
 					});
-				}
-				
-			});
-		} else {
-			var sqlQuery = 'UPDATE student_education SET school = "'+ school +'", study = "'+ study +'", degree = "'+ degree +'", from_year = "'+ from_year +'", to_year = "'+ to_year +'", description = "'+ description +'" WHERE student_id = "'+user_id+'" AND student_education_id = "'+education_id+'" ';
-			db.query(sqlQuery, function (error, result, fields) {
+					
+				});
+			}
+			
+		}  else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.skip_this_step = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var step_id = (req.body.step_id != undefined && req.body.step_id != null) ? req.body.step_id : "";
+			var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			var updateUser = 'UPDATE user_account SET profile_completed = "'+step_id+'" WHERE user_account_id = "'+user_id+'"';
+			db.query(updateUser, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 				
-				var updateUser = 'UPDATE user_account SET profile_completed = "4" WHERE user_account_id = "'+user_id+'"';
-				db.query(updateUser, function (error, result, fields) {
-					if (error) return res.status(500).send({ status: 600, msg: error.message });
-					
-					let resultset = {
-						"school" : school,
-						"study" : study,
-						"degree" : degree,
-						"from_year" : from_year,
-						"to_year" : to_year,
-						"description" : description,
-						"education_id" : education_id,
-						"user_id" : user_id,
-					}
-					
-					return res.status(200).send({ status: 200, data: resultset });
+				let resultset = { }
+				
+				return res.status(200).send({ status: 200, data: resultset });
+			});
+		}  else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.delete_education = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var education_id = (req.body.education_id != undefined && req.body.education_id != null) ? req.body.education_id : "";
+			var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			var updateUser = 'DELETE  FROM student_education WHERE student_id = "'+user_id+'" AND student_education_id = "'+education_id+'"';
+			db.query(updateUser, function (error, result, fields) {
+				if (error) return res.status(500).send({ status: 600, msg: error.message });
+				
+				let resultset = { }
+				
+				return res.status(200).send({ status: 200, data: resultset });
+			});
+		}  else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.get_education_details = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var education_id = (req.body.education_id != undefined && req.body.education_id != null) ? req.body.education_id : "";
+			var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
+			if(education_id!= ""){
+				db.query('SELECT * FROM student_education WHERE student_id = "'+user_id+'" AND student_education_id = "'+education_id+'"', function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
 				});
 				
-			});
-		}
-		
-	}  else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
+			} else {
+				return res.status(200).send({ code: 600, msg: 'No Education ID Passed' });
+				
+			}
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
 
-module.exports.skip_this_step = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var step_id = (req.body.step_id != undefined && req.body.step_id != null) ? req.body.step_id : "";
-		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		var updateUser = 'UPDATE user_account SET profile_completed = "'+step_id+'" WHERE user_account_id = "'+user_id+'"';
-		db.query(updateUser, function (error, result, fields) {
-			if (error) return res.status(500).send({ status: 600, msg: error.message });
-			
-			let resultset = { }
-			
-			return res.status(200).send({ status: 200, data: resultset });
+	module.exports.get_countries = function (req, res, next) {
+		db.query("SELECT id, country_name as name, country_name FROM countries", function (err, result, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+
+			return res.status(200).send({ status: 200, data: result });
 		});
-	}  else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
+	}
 
-module.exports.delete_education = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var education_id = (req.body.education_id != undefined && req.body.education_id != null) ? req.body.education_id : "";
-		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		var updateUser = 'DELETE  FROM student_education WHERE student_id = "'+user_id+'" AND student_education_id = "'+education_id+'"';
-		db.query(updateUser, function (error, result, fields) {
-			if (error) return res.status(500).send({ status: 600, msg: error.message });
-			
-			let resultset = { }
-			
-			return res.status(200).send({ status: 200, data: resultset });
+	module.exports.get_states = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var country_id = (req.body.country_id != undefined && req.body.country_id != null) ? req.body.country_id : "";
+			if(country_id!= ""){
+				db.query("SELECT id, state_name as name  FROM states WHERE country_id = '"+country_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			} else {
+				return res.status(200).send({ code: 600, msg: 'No Country ID Passed' });
+				
+			}
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.get_cities = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var state_id = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
+			if(state_id!= ""){
+				db.query("SELECT id, name  FROM cities WHERE state_id = '"+state_id+"'", function (err, result, fields) {
+					if (err) return res.status(200).send({ status: 500, data: err });
+
+					return res.status(200).send({ status: 200, data: result });
+				});
+				
+			} else {
+				return res.status(200).send({ code: 600, msg: 'No State ID Passed' });
+				
+			}
+		} else {
+			return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
+		} 
+	}
+
+	module.exports.get_calling_code = function (req, res, next) {
+		db.query('SELECT call_prefix as id, CONCAT("(+", call_prefix, ")", " ", country_name) AS calling_code from countries WHERE call_prefix != "" ORDER BY country_name ASC', function (err, result, fields) {
+			if (err) return res.status(200).send({ status: 500, data: err });
+
+			return res.status(200).send({ status: 200, data: result });
 		});
-	}  else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
+	}
 
-module.exports.get_education_details = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var education_id = (req.body.education_id != undefined && req.body.education_id != null) ? req.body.education_id : "";
-		var user_id      = (req.body.user_id != undefined && req.body.user_id != null) ? req.body.user_id : "";
-		if(education_id!= ""){
-			db.query('SELECT * FROM student_education WHERE student_id = "'+user_id+'" AND student_education_id = "'+education_id+'"', function (err, result, fields) {
-				if (err) return res.status(200).send({ status: 500, data: err });
-
-				return res.status(200).send({ status: 200, data: result });
-			});
+	module.exports.add_update_profile_employment = function (req, res, next) {
+		if (Object.keys(req.body).length > 0) {
+			var company_name     = (req.body.company_name != undefined && req.body.company_name != null) ? req.body.company_name : "";
+			var job_title        = (req.body.job_title != undefined && req.body.job_title != null) ? req.body.job_title : "";
+			var location         = (req.body.location != undefined && req.body.location != null) ? req.body.location : "";
 			
-		} else {
-			return res.status(200).send({ code: 600, msg: 'No Education ID Passed' });
-			
-		}
-	} else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
-
-module.exports.get_countries = function (req, res, next) {
-	db.query("SELECT id, country_name as name, country_name FROM countries", function (err, result, fields) {
-		if (err) return res.status(200).send({ status: 500, data: err });
-
-		return res.status(200).send({ status: 200, data: result });
-	});
-}
-
-module.exports.get_states = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var country_id = (req.body.country_id != undefined && req.body.country_id != null) ? req.body.country_id : "";
-		if(country_id!= ""){
-			db.query("SELECT id, state_name as name  FROM states WHERE country_id = '"+country_id+"'", function (err, result, fields) {
-				if (err) return res.status(200).send({ status: 500, data: err });
-
-				return res.status(200).send({ status: 200, data: result });
-			});
-			
-		} else {
-			return res.status(200).send({ code: 600, msg: 'No Country ID Passed' });
-			
-		}
-	} else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
-
-module.exports.get_cities = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var state_id = (req.body.state_id != undefined && req.body.state_id != null) ? req.body.state_id : "";
-		if(state_id!= ""){
-			db.query("SELECT id, name  FROM cities WHERE state_id = '"+state_id+"'", function (err, result, fields) {
-				if (err) return res.status(200).send({ status: 500, data: err });
-
-				return res.status(200).send({ status: 200, data: result });
-			});
-			
-		} else {
-			return res.status(200).send({ code: 600, msg: 'No State ID Passed' });
-			
-		}
-	} else {
-		return res.status(200).send({ code: 600, msg: 'No Parameter Passed' });
-	} 
-}
-
-module.exports.get_calling_code = function (req, res, next) {
-	db.query('SELECT call_prefix as id, CONCAT("(+", call_prefix, ")", " ", country_name) AS calling_code from countries WHERE call_prefix != "" ORDER BY country_name ASC', function (err, result, fields) {
-		if (err) return res.status(200).send({ status: 500, data: err });
-
-		return res.status(200).send({ status: 200, data: result });
-	});
-}
-
-module.exports.add_update_profile_employment = function (req, res, next) {
-	if (Object.keys(req.body).length > 0) {
-		var company_name     = (req.body.company_name != undefined && req.body.company_name != null) ? req.body.company_name : "";
-		var job_title        = (req.body.job_title != undefined && req.body.job_title != null) ? req.body.job_title : "";
-		var location         = (req.body.location != undefined && req.body.location != null) ? req.body.location : "";
-		
 		//var country          = (req.body.country != undefined && req.body.country != null) ? req.body.country : "";
 		var country_id       = (req.body.country_id != undefined && req.body.country_id != null) ? req.body.country_id : "";
 		var country          = (req.body.country != undefined && req.body.country != null) ? req.body.country : "";
@@ -1366,7 +1390,7 @@ module.exports.change_password = function (req, res, next) {
 		
 		db.query(user_select_query, function (err, resultset, fields) {
 			if (err) return res.status(200).send({ status: 500, data: err });
-		
+			
 			if(resultset[0]['password'] == md5(old_pass)){
 				var updateUser = 'UPDATE user_account SET is_registered_complete = "1", password = MD5("' + new_pass + '") WHERE user_account_id = "'+ user_id +'"';
 				db.query(updateUser, function (error, result, fields) {

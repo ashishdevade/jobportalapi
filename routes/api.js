@@ -10,6 +10,7 @@ var constants = require('../config/constants');
 // Models - start 
 var userModel = require('../models/user.model');
 var adminModel = require('../models/admin.model');
+var jobsModel = require('../models/jobs.model');
 var testModel = require('../models/test.model');
 // Models - end
 const bodyParser = require('body-parser');
@@ -322,5 +323,20 @@ router.post('/admin/delete_master_data', adminModel.delete_master_data, function
   // res.json({ status : res.status, message: res.message });
 });
 
+
+// jobs model 
+
+
+router.post('/jobs/get_job_posting', jobsModel.get_job_posting, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/jobs/add_update_job_posting', jobsModel.add_update_job_posting, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
+
+router.post('/jobs/delete_job_posting', jobsModel.delete_job_posting, function (req, res, callback) {
+  // res.json({ status : res.status, message: res.message });
+});
 
 module.exports = router;
