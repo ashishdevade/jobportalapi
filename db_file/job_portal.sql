@@ -48326,6 +48326,7 @@ CREATE TABLE `job_posting` (
   `location_country` varchar(200) DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
   `job_profile_id` int(11) DEFAULT NULL,
+  `department` text,
   `industry_id` text,
   `skills_list` text COMMENT 'Some skills multi select',
   `rate_type` varchar(20) DEFAULT NULL COMMENT 'hourly | fixed',
@@ -48346,6 +48347,7 @@ CREATE TABLE `job_posting` (
   `candidate_city_name` varchar(100) DEFAULT NULL,
   `candidate_language` text,
   `job_status` varchar(20) DEFAULT NULL COMMENT '2 - active | 3 - inactive | 1 - draft | 4 - expired',
+  `job_preference` varchar(20) DEFAULT NULL COMMENT 'Remote | On-Site  | Flexible',
   `hashtags` text COMMENT 'comma seperated ',
   `date_created` datetime DEFAULT NULL,
   `date_updated` datetime DEFAULT NULL,
@@ -48353,6 +48355,14 @@ CREATE TABLE `job_posting` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 TRUNCATE `job_posting`;
+INSERT INTO `job_posting` (`id`, `company_id`, `job_title`, `job_description`, `candidate_required_description`, `expert_level`, `location_country_id`, `location_country`, `category`, `job_profile_id`, `department`, `industry_id`, `skills_list`, `rate_type`, `hourly_rate_from`, `hourly_rate_to`, `fixed_rate`, `project_type`, `project_status`, `project_length`, `candidate_required_type`, `total_candidate_required`, `minimum_hours_from_candidate`, `candidate_country_id`, `candidate_country_name`, `candidate_state_id`, `candidate_state_name`, `candidate_city_id`, `candidate_city_name`, `candidate_language`, `job_status`, `job_preference`, `hashtags`, `date_created`, `date_updated`) VALUES
+(2,	2,	'Title 1 Test',	'Title 1 Test',	NULL,	'1',	101,	'India',	2,	1,	NULL,	'8',	'[{\"id\":1,\"name\":\"SQL\"}]',	'hourly',	'5',	'200',	'10',	'1',	'1',	'1 - 3 Months',	'1',	1,	'20',	101,	'India',	21,	'Madhya Pradesh',	2229,	'Indore',	'[{\"id\":318,\"name\":\"Algerian Sign Language\"}]',	'1',	'Remote',	'',	'2021-10-18 14:53:52',	'2021-10-18 14:53:52'),
+(3,	2,	'Title 1',	'Test',	'null',	'1',	101,	'India',	3,	2,	NULL,	'8',	'[{\"id\":2,\"name\":\"NoSQL\"}]',	'hourly',	'5',	'200',	'2',	'1',	'1',	'1 - 3 Months',	'1',	1,	'20',	101,	'India',	21,	'Madhya Pradesh',	2229,	'Indore',	'[]',	'1',	'Remote',	'',	'2021-10-18 14:54:58',	'2021-10-18 14:58:54'),
+(4,	2,	'Should work',	'asasdasd',	'null',	'1',	101,	'India',	1,	2,	NULL,	'8',	'[{\"id\":2,\"name\":\"NoSQL\"}]',	'hourly',	'5',	'200',	'50',	'1',	'1',	'1 - 3 Months',	'2',	1,	'20',	101,	'India',	21,	'Madhya Pradesh',	2229,	'Indore',	'[]',	'2',	'Remote',	'',	'2021-10-18 14:57:52',	'2021-10-18 14:58:48'),
+(5,	2,	'Title 1',	'test',	NULL,	'1',	101,	'India',	4,	3,	NULL,	'8',	'[{\"id\":2,\"name\":\"NoSQL\"}]',	'hourly',	'5',	'200',	'1',	'1',	'1',	'1 - 3 Months',	'2',	1,	'20',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	'1',	'Remote',	'',	'2021-10-18 14:59:45',	'2021-10-18 14:59:45'),
+(6,	2,	'asdad',	'teast',	NULL,	'1',	101,	'India',	8,	2,	NULL,	'8',	'[{\"id\":4,\"name\":\"Python\"}]',	'hourly',	'5',	'200',	'1',	'1',	'1',	'1 - 3 Months',	'2',	1,	'20',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	'1',	'Remote',	'',	'2021-10-18 15:00:07',	'2021-10-18 15:00:07'),
+(7,	2,	'Title 1',	'adsdasd',	NULL,	'1',	101,	'India',	4,	3,	NULL,	'8',	'',	'hourly',	'5',	'200',	'1',	'1',	'1',	'1 - 3 Months',	'2',	1,	'20',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'',	'1',	'Remote',	'',	'2021-10-18 15:01:53',	'2021-10-18 15:01:53'),
+(8,	2,	'test',	'test',	'null',	'1',	101,	'India',	1,	0,	'test',	'8',	'[{\"id\":5,\"name\":\"PL/SQL\"}]',	'hourly',	'5',	'200',	'1',	'1',	'1',	'1 - 3 Months',	'2',	1,	'20',	0,	'null',	0,	'null',	0,	'null',	'[]',	'3',	'Remote',	'',	'2021-10-18 15:07:49',	'2021-10-18 15:10:05');
 
 DROP TABLE IF EXISTS `job_posting_hashtags`;
 CREATE TABLE `job_posting_hashtags` (
@@ -48375,6 +48385,10 @@ CREATE TABLE `job_posting_questions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 TRUNCATE `job_posting_questions`;
+INSERT INTO `job_posting_questions` (`id`, `job_id`, `question`, `mandatory`) VALUES
+(24,	5,	'asdasd',	1),
+(22,	4,	'What are your expertise',	2),
+(23,	3,	'What are your expertise',	1);
 
 DROP TABLE IF EXISTS `job_profiles`;
 CREATE TABLE `job_profiles` (
@@ -53355,4 +53369,4 @@ TRUNCATE `user_company`;
 INSERT INTO `user_company` (`id`, `company_name`, `industry`, `other_industry`, `created_date`, `updated_date`) VALUES
 (2,	'MI 6 secret Service',	8,	'',	'2021-09-25 18:18:57',	'2021-09-25 18:18:57');
 
--- 2021-09-25 18:20:57
+-- 2021-10-18 09:50:41

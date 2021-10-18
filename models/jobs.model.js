@@ -23,10 +23,7 @@ module.exports.get_job_posting = function (req, res, next) {
 		var company_id = (req.body.company_id != undefined && req.body.company_id != null) ? req.body.company_id : "";
 		var data_type = (req.body.data_type != undefined && req.body.data_type != null) ? req.body.data_type : "";
 		var where_and = '';
-		/* if(search!= ''){
-			where_and = ' (first_name LIKE "%'+search+'%" or last_name LIKE "%'+search+'%" or email_id LIKE "%'+search+'%" ) ';
-		} */
-		
+ 
 		if (job_id != '') {
 			where_and = ' AND jp.id = "' + job_id +'" ';
 		}
@@ -52,21 +49,21 @@ module.exports.get_job_posting = function (req, res, next) {
 				db.query('SELECT * FROM job_posting_questions WHERE job_id = "' + job_id + '"', function (err, question_result, fields) {
 					if (err) return res.status(200).send({ status: 500, data: err });
 					result_set[0]['question_list'] = question_result;
+					for (let result of result_set) {
+						result.candidate_language =  (result.candidate_language!= "" && result.candidate_language!= null) ? JSON.parse(result.candidate_language) : []; 
+						result.industry_id =  (result.industry_id!= "" && result.industry_id!= null) ? JSON.parse(result.industry_id) : []; 
+						result.skills_list =  (result.skills_list!= "" && result.skills_list!= null) ? JSON.parse(result.skills_list) : []; 
+						
+						result['date_created'] = common_functions.get_formatted_date(result['date_created'], 2, '/');
+						result['date_updated'] = common_functions.get_formatted_date(result['date_updated'], 2, '/');
+					}
 				
-					db.query('SELECT * FROM job_posting_hashtags WHERE job_id = "' + job_id + '"', function (err, skills_result, fields) {
+					return res.status(200).send({ status: 200, data: result_set });
+					/* db.query('SELECT * FROM job_posting_hashtags WHERE job_id = "' + job_id + '"', function (err, skills_result, fields) {
 						if (err) return res.status(200).send({ status: 500, data: err });
 						result_set[0]['skill_expertise_list'] = skills_result;
-						for (let result of result_set) {
-							result.candidate_language =  (result.candidate_language!= "" && result.candidate_language!= null) ? JSON.parse(result.candidate_language) : []; 
-							result.industry_id =  (result.industry_id!= "" && result.industry_id!= null) ? JSON.parse(result.industry_id) : []; 
-							result.skills_list =  (result.skills_list!= "" && result.skills_list!= null) ? JSON.parse(result.skills_list) : []; 
-							
-							result['date_created'] = common_functions.get_formatted_date(result['date_created'], 2, '/');
-							result['date_updated'] = common_functions.get_formatted_date(result['date_updated'], 2, '/');
-						}
 						
-						return res.status(200).send({ status: 200, data: result_set });
-					});
+					}); */
 				});
 			}
 
@@ -114,6 +111,8 @@ module.exports.add_update_job_posting = function (req, res, next) {
 				candidate_state_name: dataset.candidate_state_name,
 				candidate_language: candidate_language,
 				job_status: dataset.status,
+				job_preference: dataset.job_preference,
+				department: dataset.department,
 				hashtags : '',
 				date_created: new Date(),
 				date_updated: new Date(),
@@ -136,7 +135,7 @@ module.exports.add_update_job_posting = function (req, res, next) {
 						});
 					}
 					
-					if (dataset.skill_expertise_list.length > 0) {
+				/* 	if (dataset.skill_expertise_list.length > 0) {
 						var job_posting_skill_query = 'INSERT INTO job_posting_hashtags (job_id, heading, multiple_hastags) VALUES ?';
 						let skill_data = [];
 						for (let skill_expertise of dataset.skill_expertise_list) {
@@ -145,12 +144,12 @@ module.exports.add_update_job_posting = function (req, res, next) {
 						 db.query(job_posting_skill_query, [skill_data], function (error, result, fields) {
 							if (error) return res.status(500).send({ status: 600, msg: error.message });
 						});
-					}
+					} */
 					return res.status(200).send({ status: 200, data: resultset });
 				}					
 			});
 		} else {
-			var update_query = `UPDATE job_posting SET company_id= '` + dataset.company_id + `', job_title= '` + dataset.job_title + `', job_description= '` + dataset.job_desc + `', candidate_required_description= '` + dataset.candidate_req_details + `', expert_level= '` + dataset.expert_level + `', location_country_id= '` + dataset.job_country_id + `', location_country= '` + dataset.job_country_name + `', category= '` + dataset.category_id + `', job_profile_id= '` + dataset.profile_id + `', industry_id= '` + industry + `', skills_list= '` + skills + `', rate_type= '` + dataset.rate_type + `', hourly_rate_from = '` + dataset.hourly_rate_from + `', hourly_rate_to = '` + dataset.hourly_rate_to + `', fixed_rate= '` + dataset.fixed_rate + `', project_type= '` + dataset.project_type + `', project_status= '` + dataset.project_status + `', project_length= '` + dataset.project_length + `', candidate_required_type= '` + dataset.candidate_type + `', total_candidate_required= '` + dataset.candidate_required_id + `', minimum_hours_from_candidate= '` + dataset.minimum_hours_from_candidate + `', candidate_country_id= '` + dataset.candidate_country_id + `', candidate_country_name= '` + dataset.candidate_country_name + `', candidate_city_id= '` + dataset.candidate_city_id + `', candidate_city_name= '` + dataset.candidate_city_name + `', candidate_state_id= '` + dataset.candidate_state_id + `', candidate_state_name= '` + dataset.candidate_state_name + `', candidate_language= '` + candidate_language + `', job_status= '` + dataset.status + `', date_updated= now() WHERE id = '` + dataset.job_id + `'`;
+			var update_query = `UPDATE job_posting SET company_id= '` + dataset.company_id + `', job_title= '` + dataset.job_title + `', job_description= '` + dataset.job_desc + `', candidate_required_description= '` + dataset.candidate_req_details + `', expert_level= '` + dataset.expert_level + `', location_country_id= '` + dataset.job_country_id + `', location_country= '` + dataset.job_country_name + `', category= '` + dataset.category_id + `', job_profile_id= '` + dataset.profile_id + `', industry_id= '` + industry + `', skills_list= '` + skills + `', rate_type= '` + dataset.rate_type + `', hourly_rate_from = '` + dataset.hourly_rate_from + `', hourly_rate_to = '` + dataset.hourly_rate_to + `', fixed_rate= '` + dataset.fixed_rate + `', project_type= '` + dataset.project_type + `', project_status= '` + dataset.project_status + `', project_length= '` + dataset.project_length + `', candidate_required_type= '` + dataset.candidate_type + `', total_candidate_required= '` + dataset.candidate_required_id + `', minimum_hours_from_candidate= '` + dataset.minimum_hours_from_candidate + `', candidate_country_id= '` + dataset.candidate_country_id + `', candidate_country_name= '` + dataset.candidate_country_name + `', candidate_city_id= '` + dataset.candidate_city_id + `', candidate_city_name= '` + dataset.candidate_city_name + `', candidate_state_id= '` + dataset.candidate_state_id + `', candidate_state_name= '` + dataset.candidate_state_name + `', candidate_language= '` + candidate_language + `', job_status= '` + dataset.status + `', job_preference= '` + dataset.job_preference + `', department = '` + dataset.department  + `', date_updated= now() WHERE id = '` + dataset.job_id + `'`;
 			console.log(`update_query `, update_query)
 			db.query(update_query, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
@@ -171,7 +170,7 @@ module.exports.add_update_job_posting = function (req, res, next) {
 					});
 				}
 
-				if (dataset.skill_expertise_list.length > 0) {
+				/* if (dataset.skill_expertise_list.length > 0) {
 					var delete_job_posting = 'DELETE FROM job_posting_hashtags WHERE job_id = "' + dataset.job_id + '"';
 					db.query(delete_job_posting, function (error, result, fields) {
 						if (error) return res.status(500).send({ status: 600, msg: error.message });
@@ -185,7 +184,7 @@ module.exports.add_update_job_posting = function (req, res, next) {
 					db.query(job_posting_skill_query, [skill_data], function (error, result, fields) {
 						if (error) return res.status(500).send({ status: 600, msg: error.message });
 					});
-				}
+				} */
 				
 					return res.status(200).send({ status: 200, data: [] });
 
@@ -208,14 +207,14 @@ module.exports.delete_job_posting = function (req, res, next) {
 			db.query(delete_query, function (error, result, fields) {
 				if (error) return res.status(500).send({ status: 600, msg: error.message });
 
-				var delete_query = 'DELETE  FROM job_posting_hashtags WHERE job_id = "' + job_id + '"';
+			/* 	var delete_query = 'DELETE  FROM job_posting_hashtags WHERE job_id = "' + job_id + '"';
 				db.query(delete_query, function (error, result, fields) {
 					if (error) return res.status(500).send({ status: 600, msg: error.message });
 
-					let resultset = {}
-
-					return res.status(200).send({ status: 200, data: resultset });
-				});
+					
+				}); */
+				let resultset = {}
+				return res.status(200).send({ status: 200, data: resultset });
 			});
 		});
 	} else {
